@@ -25,11 +25,11 @@ public class Predictor {
     private final String LINE_181_NORTH_OFF_COUNT = "Bus181NorthCountOff_Random_Forest_tree.model";
 
     private final String arff_55_NORTH_ON_COUNT = "Bus55NorthCountOn_Random_Forest_tree.arff";
-    private final String arff_60_NORTH_ON_COUNT = "Bus60NorthCountOn_Random_Forest_tree.model";
-    private final String arff_181_NORTH_ON_COUNT = "Bus181NorthCountOn_Random_Forest_tree.model";
-    private final String arff_55_NORTH_OFF_COUNT = "Bus55NorthCountOff_Random_Forest_tree.model";
-    private final String arff_60_NORTH_OFF_COUNT = "Bus60NorthCountOff_Random_Forest_tree.model";
-    private final String arff_181_NORTH_OFF_COUNT = "Bus181NorthCountOff_Random_Forest_tree.model";
+    private final String arff_60_NORTH_ON_COUNT = "Bus60NorthCountOn_Random_Forest_tree.arff";
+    private final String arff_181_NORTH_ON_COUNT = "Bus181NorthCountOn_Random_Forest_tree.arff";
+    private final String arff_55_NORTH_OFF_COUNT = "Bus55NorthCountOff_Random_Forest_tree.arff";
+    private final String arff_60_NORTH_OFF_COUNT = "Bus60NorthCountOff_Random_Forest_tree.arff";
+    private final String arff_181_NORTH_OFF_COUNT = "Bus181NorthCountOff_Random_Forest_tree.arff";
 
     public Predictor(String modelRootPath,String arffFileLocation){
         this.modelRootPath = modelRootPath;
