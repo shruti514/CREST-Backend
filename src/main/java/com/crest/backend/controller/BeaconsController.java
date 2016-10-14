@@ -48,9 +48,12 @@ public class BeaconsController {
         return crestResponse;
 
     }
-    @RequestMapping(value="/crowdEstimator/{busNumber}",method=RequestMethod.GET)
-    public @ResponseBody void getEstimatedCrowd(@PathVariable("busNumber") String busNumber){
-         wekaService.getWekaModel(busNumber);
+
+    @RequestMapping(value="/crowdEstimator/{tripMonth}/{service}/{timeBucket}/{tripRoute}/{busNumber}",method=RequestMethod.GET)
+    public @ResponseBody CrestResponse getEstimatedCrowd(@PathVariable("tripMonth") String tripMonth, @PathVariable("service") String service,
+    @PathVariable("timeBucket") String timeBucket,@PathVariable("tripRoute") String tripRoute,@PathVariable("busNumber") String busNumber){
+        crestResponse= wekaService.getWekaModel(tripMonth,service,timeBucket,tripRoute,busNumber);
+        return crestResponse;
     }
 
 

@@ -12,6 +12,16 @@ public class CrestResponse {
     private String routeDescription;
     private String statusDescripton;
 
+    public String getPredictedValue() {
+        return predictedValue;
+    }
+
+    public void setPredictedValue(String predictedValue) {
+        this.predictedValue = predictedValue;
+    }
+
+    private String predictedValue;
+
     public String getStatusDescripton() {
         return statusDescripton;
     }

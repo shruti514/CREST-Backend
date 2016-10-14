@@ -4,42 +4,37 @@ package com.crest.backend.service;
  * Created by Arun on 10/13/16.
  */
 
-import org.springframework.stereotype.Service;
-import weka.classifiers.Classifier;
-import weka.classifiers.trees.RandomForest;
-import weka.core.Instance;
-import weka.core.Instances;
+import com.crest.backend.com.crest.backend.constants.Service;
+import com.crest.backend.com.crest.backend.constants.TimeBucket;
+import com.crest.backend.com.crest.backend.constants.TripMonth;
+import com.crest.backend.com.crest.backend.util.DataWriter;
+import com.crest.backend.com.crest.backend.util.Predictor;
+import com.crest.backend.model.CrestResponse;
 
-import java.io.*;
 
-@Service
+@org.springframework.stereotype.Service
 public class WekaService {
-    String rootPath="/CREST/CREST-Backend/src/main/resources/";
+    String prediction;
+    String rootPath="/Users/Arun/Desktop/VTA Ridership Data/Models/";
+    CrestResponse crestResponse=new CrestResponse();
 
-    public void getWekaModel(String busNumber) {
-        try {
-            if(busNumber.equals("55")) {
-                Classifier cls = (Classifier) weka.core.SerializationHelper.read(rootPath+"Bus55NorthOnCount.model");
-                //Instances originalTrain= new Instances();
-                Instances originalTrain=null;
-                int s1=0;
-                double value=cls.classifyInstance(originalTrain.instance(s1));
-                String prediction=originalTrain.classAttribute().value((int)value);
+    public CrestResponse getWekaModel(String tripMonth, String service, String timeBucket, String tripRoute, String busNumber) {
+        tripRoute = "DE ANZA & STEVENS CREEK";
+        DataWriter dataWriter = new DataWriter();
+        dataWriter.writeDataToArffFile(TripMonth.valueOf(tripMonth), Service.valueOf(service), TimeBucket.valueOf(timeBucket), tripRoute);
+        dataWriter.write();
 
-                System.out.println("The predicted value of instance "+
-                        Integer.toString(s1)+
-                        ": "+prediction);
-
-
-            }else if(busNumber.equals("60")){
-                //RandomForest rf = (RandomForest) (new ObjectInputStream(rootPath+"Bus55NorthOnCount.model")).readObject();
-                //rf.classifyInstance();
-
-            }else if(busNumber.equals("181")){
-
-            }
-        }catch (Exception ie){
-            ie.printStackTrace();
+        Predictor predictor = new Predictor();
+        prediction=predictor.predict(busNumber);
+        if(!prediction.equals("")) {
+            crestResponse.setStatusCode("200");
+            crestResponse.setStatusDescripton("Ok");
+            crestResponse.setPredictedValue(prediction);
+        }else{
+            crestResponse.setStatusCode("500");
+            crestResponse.setStatusDescripton("Internal Server Error");
         }
+
+        return crestResponse;
     }
 }

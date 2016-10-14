@@ -13,8 +13,8 @@ import java.sql.*;
 public class DatabaseConnection {
     private final static String USER = "root";
     private final static String PASSWORD = "anhadbhasin";
-    private final static String URL="URL FOR THE MYSQL IN EC2";
-    //private final static String URL="jdbc:oracle:thin:@rdsdb-inst02.clezv3xo9unb.us-west-1.rds.amazonaws.com :3306:RDSDB02";
+    private final static String URL="localhost";
+    //private final static String URL="jdbc:oracle:thin:@rdsinstance.amazonaws.com :3306:RDSDB02";
     private final static String DRIVER = "oracle.jdbc.OracleDriver";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
