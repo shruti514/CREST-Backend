@@ -2,6 +2,7 @@ package com.crest.backend.service;
 
 /**
  * Created by Arun on 10/13/16.
+ *
  */
 
 import com.crest.backend.com.crest.backend.constants.Service;
@@ -10,22 +11,28 @@ import com.crest.backend.com.crest.backend.constants.TripMonth;
 import com.crest.backend.com.crest.backend.util.DataWriter;
 import com.crest.backend.com.crest.backend.util.Predictor;
 import com.crest.backend.model.CrestResponse;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 
 
 @org.springframework.stereotype.Service
+@PropertySource("classpath:/application.properties")
 public class WekaService {
-    String prediction;
-    String rootPath="/Users/Arun/Desktop/VTA Ridership Data/Models/";
-    CrestResponse crestResponse=new CrestResponse();
+
+    @Value("${modelFile.location}")
+    private String modelFileLocation;
+
+    @Value("${arffFile.location}")
+    private String arffLocation;
 
     public CrestResponse getWekaModel(String tripMonth, String service, String timeBucket, String tripRoute, String busNumber) {
-        tripRoute = "DE ANZA & STEVENS CREEK";
-        DataWriter dataWriter = new DataWriter();
-        dataWriter.writeDataToArffFile(TripMonth.valueOf(tripMonth), Service.valueOf(service), TimeBucket.valueOf(timeBucket), tripRoute);
-        dataWriter.write();
+        DataWriter dataWriter = new DataWriter(arffLocation);
+        dataWriter.writeDataToArffFile(TripMonth.valueOf(tripMonth), Service.valueOf(service), TimeBucket.valueOf(timeBucket), tripRoute,busNumber);
 
-        Predictor predictor = new Predictor();
-        prediction=predictor.predict(busNumber);
+        Predictor predictor = new Predictor(modelFileLocation,arffLocation);
+        String prediction = predictor.predict(busNumber);
+        CrestResponse crestResponse=new CrestResponse();
+
         if(!prediction.equals("")) {
             crestResponse.setStatusCode("200");
             crestResponse.setStatusDescripton("Ok");

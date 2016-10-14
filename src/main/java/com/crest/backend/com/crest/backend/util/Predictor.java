@@ -13,37 +13,44 @@ import java.io.FileReader;
  */
 public class Predictor {
 
+
+    private  String arffFileLocation;
+    private String modelRootPath;
+
+    private final String LINE_55_NORTH_ON_COUNT = "Bus55NorthCountOn_Random_Forest_tree.model";
+    private final String LINE_60_NORTH_ON_COUNT = "Bus60NorthCountOn_Random_Forest_tree.model";
+    private final String LINE_181_NORTH_ON_COUNT = "Bus181NorthCountOn_Random_Forest_tree.model";
+    private final String LINE_55_NORTH_OFF_COUNT = "Bus55NorthCountOff_Random_Forest_tree.model";
+    private final String LINE_60_NORTH_OFF_COUNT = "Bus60NorthCountOff_Random_Forest_tree.model";
+    private final String LINE_181_NORTH_OFF_COUNT = "Bus181NorthCountOff_Random_Forest_tree.model";
+
+    private final String arff_55_NORTH_ON_COUNT = "Bus55NorthCountOn_Random_Forest_tree.arff";
+    private final String arff_60_NORTH_ON_COUNT = "Bus60NorthCountOn_Random_Forest_tree.model";
+    private final String arff_181_NORTH_ON_COUNT = "Bus181NorthCountOn_Random_Forest_tree.model";
+    private final String arff_55_NORTH_OFF_COUNT = "Bus55NorthCountOff_Random_Forest_tree.model";
+    private final String arff_60_NORTH_OFF_COUNT = "Bus60NorthCountOff_Random_Forest_tree.model";
+    private final String arff_181_NORTH_OFF_COUNT = "Bus181NorthCountOff_Random_Forest_tree.model";
+
+    public Predictor(String modelRootPath,String arffFileLocation){
+        this.modelRootPath = modelRootPath;
+        this.arffFileLocation = arffFileLocation;
+    }
+
     protected final Logger log = LoggerFactory.getLogger(getClass());
         public String predict(String busNumber) {
-            String rootPath = "/Users/Arun/Desktop/VTA Ridership Data/Models/";
+
+            String modelFile = getModelFileToLoad(busNumber);
+            String arffFile = getArffFileToLoad(busNumber);
+
             String prediction = "";
             try {
-
-                Classifier cls=(Classifier) weka.core.SerializationHelper.read(rootPath + "Bus55NorthOnCount.model");
-                Instances instances= new Instances(new FileReader(rootPath + "line55_North_tmp.arff"));
-
-                if(busNumber.equals("60")){
-                    //Route Number 60s arff and model
-                    cls = (Classifier) weka.core.SerializationHelper.read(rootPath + "Bus55NorthOnCount.model");
-
-                    //predict instance class values
-                    instances = new Instances(new FileReader(rootPath + "line55_North_tmp.arff"));
-
-                }else if(busNumber.equals("181")){
-                    //Route Number 181s arff and model
-                    cls = (Classifier) weka.core.SerializationHelper.read(rootPath + "Bus55NorthOnCount.model");
-
-                    //predict instance class values
-
-                    instances = new Instances(new FileReader(rootPath + "line55_North_tmp.arff"));
-
-                }
+                Classifier cls=(Classifier) weka.core.SerializationHelper.read(modelFile);
+                Instances instances= new Instances(new FileReader(arffFile));
 
                 instances.setClassIndex(3);
 
-                //which instance to predict class value\
-                int size = instances.numInstances();
-                // int size = instances.size(); Method size is not available for instances
+                //which instance to predict class value
+                int size = instances.size();
 
                 //perform your prediction
                 Instance instance = instances.instance(size - 1);
@@ -57,7 +64,7 @@ public class Predictor {
 
                 log.info("-----------------------------------------------");
                 log.info("Instance => " + instance.toString());
-                //log.info("Instance => " +instance.toStringNoWeight()); --- Protected Method and unable to access
+                log.info("Instance => " +instance.toStringNoWeight());
                 log.info("Prediction => " + prediction);
                 log.info("-----------------------------------------------");
 
@@ -79,5 +86,32 @@ public class Predictor {
             }
             return prediction;
         }
+
+    private String getArffFileToLoad(String busNumber) {
+        switch (busNumber){
+            case "55":
+                return arffFileLocation+arff_55_NORTH_ON_COUNT;
+            case "60":
+                return arffFileLocation+arff_60_NORTH_ON_COUNT;
+            case "181":
+                return arffFileLocation+arff_181_NORTH_ON_COUNT;
+            default:
+                throw new IllegalArgumentException("No arff found for bus");
+        }
+    }
+
+    private String getModelFileToLoad(String busNumber) {
+        switch (busNumber){
+            case "55":
+                return modelRootPath + LINE_55_NORTH_ON_COUNT;
+            case "60":
+                return modelRootPath + LINE_60_NORTH_ON_COUNT;
+            case "181":
+                return modelRootPath + LINE_181_NORTH_ON_COUNT;
+            default:
+                throw new IllegalArgumentException("No model found for bus");
+        }
+
+    }
 
 }
