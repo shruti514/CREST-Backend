@@ -1,7 +1,6 @@
 package com.crest.backend.service;
 
 
-
 import com.crest.backend.com.crest.backend.constants.Service;
 import com.crest.backend.com.crest.backend.constants.StopIdToStopName;
 import com.crest.backend.com.crest.backend.constants.TimeBucket;
@@ -36,7 +35,7 @@ public class WekaService {
         if (!prediction.equals("")) {
             crestResponse.setStatusCode("200");
             crestResponse.setStatusDescripton("Ok");
-            crestResponse.setPredictedValue("At this time of the day "+prediction+" passengers are estimated to board bus "+ busNumber);
+            crestResponse.setPredictedValue("At this time of the day " + prediction + " passengers are estimated to board bus " + busNumber);
         } else {
             crestResponse.setStatusCode("500");
             crestResponse.setStatusDescripton("Internal Server Error");

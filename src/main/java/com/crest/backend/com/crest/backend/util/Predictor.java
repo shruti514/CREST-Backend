@@ -42,7 +42,6 @@ public class Predictor {
         try {
             Classifier cls = (Classifier) weka.core.SerializationHelper.read(modelFile);
             Instances instances = new Instances(new FileReader(arffFile));
-
             instances.setClassIndex(3);
 
             //which instance to predict class value
@@ -59,11 +58,9 @@ public class Predictor {
             prediction = instances.classAttribute().value((int) value);
 
             log.info("-----------------------------------------------");
-            log.info("Instance => " + instance.toString());
             log.info("Instance => " + instance.toStringNoWeight());
             log.info("Prediction => " + prediction);
             log.info("-----------------------------------------------");
-
 
             //Format the distribution
             String distribution = "";
@@ -74,6 +71,7 @@ public class Predictor {
                     distribution = distribution + Double.toString(percentage[i]) + ",";
                 }
             }
+
             distribution = distribution.substring(0, distribution.length() - 1);
 
             log.info("Distribution:" + distribution);
