@@ -3,6 +3,7 @@ package com.crest.backend.service;
 
 
 import com.crest.backend.com.crest.backend.constants.Service;
+import com.crest.backend.com.crest.backend.constants.StopIdToStopName;
 import com.crest.backend.com.crest.backend.constants.TimeBucket;
 import com.crest.backend.com.crest.backend.util.DataWriter;
 import com.crest.backend.com.crest.backend.util.Predictor;
@@ -25,7 +26,8 @@ public class WekaService {
 
     public CrestResponse getWekaModel(String tripMonth, String service, String timeBucket, String tripRoute, String busNumber) {
         DataWriter dataWriter = new DataWriter(arffLocation);
-        dataWriter.writeDataToArffFile(toTripMonth(tripMonth), Service.toService(service), TimeBucket.toTimeBucket(timeBucket), tripRoute, busNumber);
+        String stopName = StopIdToStopName.stopIdToStopName.get(tripRoute);
+        dataWriter.writeDataToArffFile(toTripMonth(tripMonth), Service.toService(service), TimeBucket.toTimeBucket(timeBucket), stopName, busNumber);
 
         Predictor predictor = new Predictor(modelFileLocation, arffLocation);
         String prediction = predictor.predict(busNumber);
