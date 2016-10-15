@@ -55,7 +55,7 @@ public class BeaconService {
         try {
             connection = dbConnection.getConnection();
             PreparedStatement p = connection
-                    .prepareStatement("\"select DISTANCE_IN_STEPS from distance where SOURCE_BUS_STOP_ID =? and DESTINATION_BUS_STOP_ID =? ;");
+                    .prepareStatement("select DISTANCE_IN_STEPS from distance where SOURCE_BUS_STOP_ID = ? and DESTINATION_BUS_STOP_ID = ? ;");
             p.setString(1, busStopId1);
             p.setString(2, busStopId2);
             ResultSet rs = p.executeQuery();
@@ -63,7 +63,7 @@ public class BeaconService {
                 result = rs.getString(1);
                 crestResponse.setStatusCode("200");
                 crestResponse.setStatusDescripton("Ok");
-                crestResponse.setBusNumber(result);
+                crestResponse.setRouteDescription(result);
             }
         } catch (Exception e) {
             crestResponse.setStatusCode("500");
