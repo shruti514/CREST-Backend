@@ -2,9 +2,7 @@ package com.crest.backend.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
-/**
- * Created by Arun on 10/13/16.
- */
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CrestResponse {
     private String statusCode;

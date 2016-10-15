@@ -7,10 +7,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-/**
- * Created by Arun on 10/13/16.
- */
-
 public class DatabaseConnection {
     private final static String USER = "root";
     private final static String PASSWORD = "anhadbhasin";

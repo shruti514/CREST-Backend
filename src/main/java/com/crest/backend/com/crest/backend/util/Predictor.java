@@ -8,9 +8,7 @@ import weka.core.Instances;
 
 import java.io.FileReader;
 
-/**
- * Created by Arun on 10/13/16.
- */
+
 public class Predictor {
 
 

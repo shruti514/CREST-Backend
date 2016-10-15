@@ -1,8 +1,5 @@
 package com.crest.backend.com.crest.backend.constants;
 
-/**
- * Created by Arun on 10/13/16.
- */
 public enum Service {
     WEEKDAY(1),
     SATURDAY(2),

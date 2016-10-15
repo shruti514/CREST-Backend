@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.io.IOException;
 
-/**
- * Created by Arun on 10/13/16.
- */
 @Controller
 @Service
 @PropertySource("classpath:/application.properties")

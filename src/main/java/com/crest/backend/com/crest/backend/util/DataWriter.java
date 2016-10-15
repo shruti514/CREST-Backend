@@ -7,9 +7,6 @@ import com.crest.backend.com.crest.backend.constants.TripMonth;
 import java.io.File;
 import java.io.FileWriter;
 
-/**
- * Created by Arun on 10/13/16.
- */
 public class DataWriter {
     private final String arff_55_NORTH_ON_COUNT = "Bus55NorthCountOn_Random_Forest_tree.arff";
     private final String arff_60_NORTH_ON_COUNT = "Bus60NorthCountOn_Random_Forest_tree.model";

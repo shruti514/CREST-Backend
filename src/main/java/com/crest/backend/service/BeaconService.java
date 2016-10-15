@@ -9,9 +9,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-/**
- * Created by Arun on 10/13/16.
- */
+
 public class BeaconService {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
