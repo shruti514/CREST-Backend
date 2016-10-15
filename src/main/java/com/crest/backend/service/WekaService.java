@@ -25,7 +25,7 @@ public class WekaService {
 
     public CrestResponse getWekaModel(String tripMonth, String service, String timeBucket, String tripRoute, String busNumber) {
         DataWriter dataWriter = new DataWriter(arffLocation);
-        dataWriter.writeDataToArffFile(toTripMonth(tripMonth), Service.valueOf(service), TimeBucket.valueOf(timeBucket), tripRoute, busNumber);
+        dataWriter.writeDataToArffFile(toTripMonth(tripMonth), Service.toService(service), TimeBucket.toTimeBucket(timeBucket), tripRoute, busNumber);
 
         Predictor predictor = new Predictor(modelFileLocation, arffLocation);
         String prediction = predictor.predict(busNumber);
@@ -34,7 +34,7 @@ public class WekaService {
         if (!prediction.equals("")) {
             crestResponse.setStatusCode("200");
             crestResponse.setStatusDescripton("Ok");
-            crestResponse.setPredictedValue(prediction);
+            crestResponse.setPredictedValue("At this time of the day "+prediction+" passengers are estimated to board bus "+ busNumber);
         } else {
             crestResponse.setStatusCode("500");
             crestResponse.setStatusDescripton("Internal Server Error");

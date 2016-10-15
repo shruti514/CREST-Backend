@@ -17,4 +17,19 @@ public enum Service {
         return value;
     }
 
+
+    public static Service toService(String reqParam){
+        Service[] values = values();
+        for(Service service : values){
+            if(reqParam.equals("1")){
+               return SUNDAY_HOLIDAY;
+            }if(reqParam.equals("7")){
+                return SATURDAY;
+            }else{
+                return WEEKDAY;
+            }
+        }
+        return null;
+    }
+
 }
