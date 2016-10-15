@@ -13,9 +13,9 @@ import java.sql.*;
 public class DatabaseConnection {
     private final static String USER = "root";
     private final static String PASSWORD = "anhadbhasin";
-    private final static String URL="localhost";
+    private final static String URL="jdbc:mysql://localhost:3306/crust";
     //private final static String URL="jdbc:oracle:thin:@rdsinstance.amazonaws.com :3306:RDSDB02";
-    private final static String DRIVER = "oracle.jdbc.OracleDriver";
+    private final static String DRIVER = "com.mysql.jdbc.Driver";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 

@@ -22,6 +22,18 @@ public enum TripMonth {
         this.monthSequence = monthSequence;
     }
 
+    public static TripMonth toTripMonth(String value){
+        TripMonth[] values = values();
+        for(TripMonth tripMonth : values)
+        {
+            String str = tripMonth.getMonthSequence()+"";
+            if(str.equals(value)){
+                return tripMonth;
+            }
+        }
+        return null;
+    }
+
     public int getMonthSequence() {
         return monthSequence;
     }

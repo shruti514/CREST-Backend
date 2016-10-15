@@ -14,6 +14,8 @@ import com.crest.backend.model.CrestResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 
+import static com.crest.backend.com.crest.backend.constants.TripMonth.toTripMonth;
+
 
 @org.springframework.stereotype.Service
 @PropertySource("classpath:/application.properties")
@@ -27,7 +29,7 @@ public class WekaService {
 
     public CrestResponse getWekaModel(String tripMonth, String service, String timeBucket, String tripRoute, String busNumber) {
         DataWriter dataWriter = new DataWriter(arffLocation);
-        dataWriter.writeDataToArffFile(TripMonth.valueOf(tripMonth), Service.valueOf(service), TimeBucket.valueOf(timeBucket), tripRoute,busNumber);
+        dataWriter.writeDataToArffFile(toTripMonth(tripMonth), Service.valueOf(service), TimeBucket.valueOf(timeBucket), tripRoute,busNumber);
 
         Predictor predictor = new Predictor(modelFileLocation,arffLocation);
         String prediction = predictor.predict(busNumber);
