@@ -6,67 +6,64 @@ import com.crest.backend.com.crest.backend.constants.TripMonth;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 
 /**
  * Created by Arun on 10/13/16.
  */
 public class DataWriter {
-    private String arffFileLocation;
-
     private final String arff_55_NORTH_ON_COUNT = "Bus55NorthCountOn_Random_Forest_tree.arff";
     private final String arff_60_NORTH_ON_COUNT = "Bus60NorthCountOn_Random_Forest_tree.model";
     private final String arff_181_NORTH_ON_COUNT = "Bus181NorthCountOn_Random_Forest_tree.model";
     private final String arff_55_NORTH_OFF_COUNT = "Bus55NorthCountOff_Random_Forest_tree.model";
     private final String arff_60_NORTH_OFF_COUNT = "Bus60NorthCountOff_Random_Forest_tree.model";
     private final String arff_181_NORTH_OFF_COUNT = "Bus181NorthCountOff_Random_Forest_tree.model";
+    private String arffFileLocation;
 
-    public DataWriter(String arffFileLocation){
+    public DataWriter(String arffFileLocation) {
         this.arffFileLocation = arffFileLocation;
     }
 
-    public boolean writeDataToArffFile(TripMonth tripMonth, Service service, TimeBucket timeBucket, String stopName, String busNumber){
+    public boolean writeDataToArffFile(TripMonth tripMonth, Service service, TimeBucket timeBucket, String stopName, String busNumber) {
 
-        try{
-            String timeBucketValue = timeBucket == TimeBucket.EARLY_MORNING? "\'"+TimeBucket.EARLY_MORNING.getDisplayValue()+"\'":timeBucket.getDisplayValue();
-            String data = "\n"+tripMonth.getMonthSequence()+","+service.getValue()+","+
-                    timeBucketValue+","+"0"+","+"\'"+stopName+"\'";
+        try {
+            String timeBucketValue = timeBucket == TimeBucket.EARLY_MORNING ? "\'" + TimeBucket.EARLY_MORNING.getDisplayValue() + "\'" : timeBucket.getDisplayValue();
+            String data = "\n" + tripMonth.getMonthSequence() + "," + service.getValue() + "," +
+                    timeBucketValue + "," + "0" + "," + "\'" + stopName + "\'";
 
             File file = new File(getArffFileToLoad(busNumber));
 
             //if file doesnt exists, then create it
-            if(!file.exists()){
+            if (!file.exists()) {
                 System.out.println("Creating a file..");
                 file.createNewFile();
             }
 
             //true = append file
-            FileWriter fileWriter = new FileWriter(file,true);
+            FileWriter fileWriter = new FileWriter(file, true);
             fileWriter.write(data);
             fileWriter.flush();
             fileWriter.close();
 
             System.out.println("Done");
 
-        }catch(Exception e){
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
         return false;
     }
 
     private String getArffFileToLoad(String busNumber) {
-        switch (busNumber){
+        switch (busNumber) {
             case "55":
-                return arffFileLocation+arff_55_NORTH_ON_COUNT;
+                return arffFileLocation + arff_55_NORTH_ON_COUNT;
             case "60":
-                return arffFileLocation+arff_60_NORTH_ON_COUNT;
+                return arffFileLocation + arff_60_NORTH_ON_COUNT;
             case "181":
-                return arffFileLocation+arff_181_NORTH_ON_COUNT;
+                return arffFileLocation + arff_181_NORTH_ON_COUNT;
             default:
                 throw new IllegalArgumentException("No arff found for bus");
         }
     }
-
 
 
 }

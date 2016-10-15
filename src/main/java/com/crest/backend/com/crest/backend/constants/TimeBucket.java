@@ -13,7 +13,7 @@ public enum TimeBucket {
 
     private String displayValue;
 
-    TimeBucket(String displayValue){
+    TimeBucket(String displayValue) {
         this.displayValue = displayValue;
     }
 

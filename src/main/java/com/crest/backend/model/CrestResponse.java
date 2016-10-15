@@ -11,6 +11,7 @@ public class CrestResponse {
     private String busNumber;
     private String routeDescription;
     private String statusDescripton;
+    private String predictedValue;
 
     public String getPredictedValue() {
         return predictedValue;
@@ -19,8 +20,6 @@ public class CrestResponse {
     public void setPredictedValue(String predictedValue) {
         this.predictedValue = predictedValue;
     }
-
-    private String predictedValue;
 
     public String getStatusDescripton() {
         return statusDescripton;
