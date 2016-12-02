@@ -20,11 +20,13 @@ public class BeaconService {
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
+        PreparedStatement preparedStatement = null;
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement p = connection.prepareStatement("select BUS_STOP_ID from map where BEACON_ID = ?;");
-            p.setString(1, id);
-            ResultSet rs = p.executeQuery();
+            preparedStatement = connection.prepareStatement("select BUS_STOP_ID from map where BEACON_ID = ?;");
+            preparedStatement.setString(1, id);
+
+            ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 result = rs.getString(1);
                 crestResponse.setStatusCode("200");
@@ -35,13 +37,11 @@ public class BeaconService {
             crestResponse.setStatusCode("500");
             crestResponse.setStatusDescripton("Internal Server Error");
             log.error("Exception at getUserIdFromSessionToken", e);
-
-
         } finally {
+            dbConnection.closePreparedStatement(preparedStatement);
             dbConnection.closeConnection(connection);
         }
         return crestResponse;
-
     }
 
 

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
@@ -42,6 +43,16 @@ public class DatabaseConnection {
             } catch (SQLException e) {
                 log.error("SQL Exception at closeConnection", e);
 
+            }
+        }
+    }
+
+    public void closePreparedStatement(PreparedStatement preparedStatement) {
+        if (preparedStatement != null) {
+            try {
+                preparedStatement.close();
+            } catch (SQLException e) {
+                log.error("SQL Exception at closePreparedStatement", e);
             }
         }
     }

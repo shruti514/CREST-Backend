@@ -37,48 +37,49 @@ public class Predictor {
 
         String modelFile = getModelFileToLoad(busNumber);
         String arffFile = getArffFileToLoad(busNumber);
-
         String prediction = "";
         try {
             Classifier cls = (Classifier) weka.core.SerializationHelper.read(modelFile);
             Instances instances = new Instances(new FileReader(arffFile));
             instances.setClassIndex(3);
-
             //which instance to predict class value
             int size = instances.size();
-
             //perform your prediction
             Instance instance = instances.instance(size - 1);
             double value = cls.classifyInstance(instance);
-
             //get the prediction percentage or distribution
             double[] percentage = cls.distributionForInstance(instance);
-
             //get the name of the class value
             prediction = instances.classAttribute().value((int) value);
 
-            log.info("-----------------------------------------------");
-            log.info("Instance => " + instance.toStringNoWeight());
-            log.info("Prediction => " + prediction);
-            log.info("-----------------------------------------------");
+            logPrediction(prediction, instance);
+            logDistribution(value, percentage);
 
-            //Format the distribution
-            String distribution = "";
-            for (int i = 0; i < percentage.length; i = i + 1) {
-                if (i == value) {
-                    distribution = distribution + "*" + Double.toString(percentage[i]) + ",";
-                } else {
-                    distribution = distribution + Double.toString(percentage[i]) + ",";
-                }
-            }
-
-            distribution = distribution.substring(0, distribution.length() - 1);
-
-            log.info("Distribution:" + distribution);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            log.error("Error occurred in predict()",ex.getMessage());
         }
         return prediction;
+    }
+
+    private void logPrediction(String prediction, Instance instance) {
+        log.info("-----------------------------------------------");
+        log.info("Instance => " + instance.toStringNoWeight());
+        log.info("Prediction => " + prediction);
+        log.info("-----------------------------------------------");
+    }
+
+    private void logDistribution(double value, double[] percentage) {
+        //Format the distribution
+        String distribution = "";
+        for (int i = 0; i < percentage.length; i = i + 1) {
+            if (i == value) {
+                distribution = distribution + "*" + Double.toString(percentage[i]) + ",";
+            } else {
+                distribution = distribution + Double.toString(percentage[i]) + ",";
+            }
+        }
+        distribution = distribution.substring(0, distribution.length() - 1);
+        log.info("Distribution:" + distribution);
     }
 
     private String getArffFileToLoad(String busNumber) {
