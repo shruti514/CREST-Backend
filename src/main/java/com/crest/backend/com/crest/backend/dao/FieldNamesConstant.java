@@ -5,4 +5,5 @@ package com.crest.backend.com.crest.backend.dao;
  */
 public class FieldNamesConstant {
     public static final String BUS_STOP = "bus_stop";
+    public static final String ID = "id";
 }

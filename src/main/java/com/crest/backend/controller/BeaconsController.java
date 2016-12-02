@@ -64,47 +64,32 @@ public class BeaconsController {
         return crestResponse;
     }
 
-    @RequestMapping(value = "/user/caregiver/login/{userName}/{password}", method = RequestMethod.GET)
-    public
-    @ResponseBody
-    CrestResponse careGiverLogin(@PathVariable("userName") String userName, @PathVariable("password") String password) throws Exception {
-
-        crestResponse = userService.careGiverLogin(userName, password);
-        if (crestResponse.getSessionToken() != null) {
-            return crestResponse;
-        } else {
-            crestResponse.setSessionToken("Invalid user");
-            return crestResponse;
-        }
-
-
-    }
-
     @RequestMapping(value = "/user/login/{userName}/{password}", method = RequestMethod.GET)
     public
     @ResponseBody
     CrestResponse userLogin(@PathVariable("userName") String userName, @PathVariable("password") String password) throws Exception {
 
         crestResponse = userService.userLogin(userName, password);
-        if (crestResponse.getSessionToken() != null) {
+        if (crestResponse.getUserId() != null) {
             return crestResponse;
         } else {
-            crestResponse.setSessionToken("Invalid user");
+            crestResponse.setStatusDescripton("Invalid user");
             return crestResponse;
         }
 
 
     }
 
-    @RequestMapping(value = "/user/caregiver/register/{firstName}/{lastName}/{contactNumber}/{userName}/{password}", method = RequestMethod.POST)
+
+    @RequestMapping(value = "/user/caregiver/register/{firstName}/{lastName}/{age}/{contactNumber}/{address}/{userName}/{password}", method = RequestMethod.POST)
     public
     @ResponseBody
     CrestResponse careGiverRegister(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName,
                                     @PathVariable("age") String age, @PathVariable("address") String address,
-                                    @PathVariable("contactNumber") String contactNumber, @PathVariable("drivingLicence") String drivingLicence,
+                                    @PathVariable("contactNumber") String contactNumber,
                                     @PathVariable("userName") String userName, @PathVariable("password") String password) throws Exception {
 
-        crestResponse = userService.careGiverRegister(firstName, lastName, age, address, contactNumber, drivingLicence, userName, password);
+        crestResponse = userService.careGiverRegister(firstName, lastName, age, address, contactNumber, userName, password);
 
         return crestResponse;
 
@@ -112,17 +97,17 @@ public class BeaconsController {
     }
 
     @RequestMapping(value = "/user/register/{firstName}/{lastName}/{contactNumber}/{age}/{address}/{emergencyContact}" +
-            "/{medicalCondition}/{medication}/{additionalInfo}/{userName}/{password}", method = RequestMethod.POST)
+            "/{careGiverEmail}/{additionalInfo}/{userName}/{password}", method = RequestMethod.POST)
     public
     @ResponseBody
     CrestResponse userRegister(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName,
                                @PathVariable("contactNumber") String contactNumber, @PathVariable("age") String age,
                                @PathVariable("address") String address, @PathVariable("emergencyContact") String emergencyContact,
-                               @PathVariable("medicalCondition") String medicalCondition, @PathVariable("medication") String medication,
+                               @PathVariable("careGiverEmail") String careGiverEmail,
                                @PathVariable("additionalInfo") String additionalInfo, @PathVariable("userName") String userName,
                                @PathVariable("password") String password) throws Exception {
 
-        crestResponse = userService.userRegister(firstName, lastName, contactNumber, age, address, emergencyContact, medicalCondition, medication, additionalInfo, userName, password);
+        crestResponse = userService.userRegister(firstName, lastName, contactNumber, age, address, emergencyContact, careGiverEmail, additionalInfo, userName, password);
 
         return crestResponse;
     }

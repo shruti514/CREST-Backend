@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
+import static com.crest.backend.com.crest.backend.dao.TableNameConstants.USER;
+
 /**
  * Created by Arun on 11/29/16.
  */
@@ -20,49 +22,21 @@ public class UserService {
 
     CrestResponse crestResponse = new CrestResponse();
 
-    public CrestResponse careGiverLogin(String userName, String password) {
-        Connection connection = null;
-        DatabaseConnection dbConnection = new DatabaseConnection();
-        String result = "";
-        try {
-            connection = dbConnection.getConnection();
-            PreparedStatement p = connection.prepareStatement("select sessionToken from careGiver where userName = ? and password= ? ;");
-            p.setString(1, userName);
-            p.setString(2, password);
-            ResultSet rs = p.executeQuery();
-            while (rs.next()) {
-                result = rs.getString(1);
-                crestResponse.setStatusCode("200");
-                crestResponse.setStatusDescripton("Ok");
-                crestResponse.setSessionToken(result);
-            }
-        } catch (Exception e) {
-            crestResponse.setStatusCode("500");
-            crestResponse.setStatusDescripton("Internal Server Error");
-            log.error("Exception at getUserIdFromSessionToken", e);
-
-
-        } finally {
-            dbConnection.closeConnection(connection);
-        }
-        return crestResponse;
-    }
-
     public CrestResponse userLogin(String userName, String password) {
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement p = connection.prepareStatement("select sessionToken from user where userName = ? and password= ? ;");
+            PreparedStatement p = connection.prepareStatement("select ID  as ID from " + USER + " where email_id = ? and password= ? ;");
             p.setString(1, userName);
             p.setString(2, password);
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
-                result = rs.getString(1);
+                result = rs.getString("ID");
                 crestResponse.setStatusCode("200");
                 crestResponse.setStatusDescripton("Ok");
-                crestResponse.setSessionToken(result);
+                crestResponse.setUserId(result);
             }
         } catch (Exception e) {
             crestResponse.setStatusCode("500");
@@ -76,14 +50,14 @@ public class UserService {
         return crestResponse;
     }
 
-    public CrestResponse careGiverRegister(String firstName, String lastName, String age, String address, String contactNumber, String drivingLicense, String userName, String password) {
+
+    public CrestResponse careGiverRegister(String firstName, String lastName, String age, String address, String contactNumber, String userName, String password) {
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
-        String sessionToken = firstName + lastName;
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM CAREGIVER WHERE USERNAME =?");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM USERS WHERE email_id =?");
             preparedStatement.setString(1, userName);
             ResultSet r = preparedStatement.executeQuery();
             Integer alreadyPresent = 0;
@@ -91,22 +65,20 @@ public class UserService {
                 alreadyPresent = r.getInt("COUNT");
             }
             if (alreadyPresent <= 0) {
-                PreparedStatement p = connection.prepareStatement("INSERT INTO USER VALUES (?,?,?,?,?,?,?,?,?)");
+                PreparedStatement p = connection.prepareStatement("INSERT INTO CAREGIVER VALUES (?,?,?,?,?,?,?)");
                 p.setString(1, firstName);
                 p.setString(2, lastName);
                 p.setString(3, contactNumber);
                 p.setString(4, age);
                 p.setString(5, address);
-                p.setString(6, drivingLicense);
-                p.setString(7, userName);
-                p.setString(8, password);
-                p.setString(9, sessionToken);
+                p.setString(6, userName);
+                p.setString(7, password);
                 ResultSet rs = p.executeQuery();
                 while (rs.next()) {
                     result = rs.getString(1);
                     crestResponse.setStatusCode("200");
-                    crestResponse.setStatusDescripton("Ok");
-                    crestResponse.setSessionToken(result);
+                    crestResponse.setStatusDescripton(result);
+
                 }
             } else {
                 crestResponse.setStatusCode("200");
@@ -125,14 +97,13 @@ public class UserService {
     }
 
     public CrestResponse userRegister(String firstName, String lastName, String contactNumber, String age, String address, String emergencyContact,
-                                      String medicalCondition, String medication, String additionalInfo, String userName, String password) {
+                                      String careGiverEmail, String additionalInfo, String userName, String password) {
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
-        String sessionToken = firstName + lastName;
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM USER WHERE USERNAME =?");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM USERS WHERE email_id =?");
             preparedStatement.setString(1, userName);
             ResultSet r = preparedStatement.executeQuery();
             Integer alreadyPresent = 0;
@@ -140,25 +111,22 @@ public class UserService {
                 alreadyPresent = r.getInt("COUNT");
             }
             if (alreadyPresent <= 0) {
-                PreparedStatement p = connection.prepareStatement("INSERT INTO USER VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
+                PreparedStatement p = connection.prepareStatement("INSERT INTO DEPENDANTS VALUES (?,?,?,?,?,?,?,?,?,?)");
                 p.setString(1, firstName);
                 p.setString(2, lastName);
                 p.setString(3, contactNumber);
                 p.setString(4, age);
                 p.setString(5, address);
                 p.setString(6, emergencyContact);
-                p.setString(7, medicalCondition);
-                p.setString(8, medication);
-                p.setString(9, additionalInfo);
-                p.setString(10, userName);
-                p.setString(11, password);
-                p.setString(12, sessionToken);
+                p.setString(7, careGiverEmail);
+                p.setString(8, additionalInfo);
+                p.setString(9, userName);
+                p.setString(10, password);
                 ResultSet rs = p.executeQuery();
                 while (rs.next()) {
                     result = rs.getString(1);
                     crestResponse.setStatusCode("200");
-                    crestResponse.setStatusDescripton("Ok");
-                    crestResponse.setSessionToken(result);
+                    crestResponse.setStatusDescripton(result);
                 }
             } else {
                 crestResponse.setStatusCode("200");
