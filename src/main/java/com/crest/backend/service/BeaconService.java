@@ -1,6 +1,8 @@
 package com.crest.backend.service;
 
 import com.crest.backend.com.crest.backend.dao.DatabaseConnection;
+import com.crest.backend.com.crest.backend.dao.FieldNamesConstant;
+import com.crest.backend.com.crest.backend.dao.TableNameConstants;
 import com.crest.backend.model.CrestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +10,9 @@ import org.slf4j.LoggerFactory;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+
+import static com.crest.backend.com.crest.backend.dao.FieldNamesConstant.BUS_STOP;
+import static com.crest.backend.com.crest.backend.dao.TableNameConstants.BEACON_REGISTRY;
 
 
 public class BeaconService {
@@ -23,7 +28,7 @@ public class BeaconService {
         PreparedStatement preparedStatement = null;
         try {
             connection = dbConnection.getConnection();
-            preparedStatement = connection.prepareStatement("select BUS_STOP_ID from map where BEACON_ID = ?;");
+            preparedStatement = connection.prepareStatement("select"+ BUS_STOP+" from "+ BEACON_REGISTRY+" where BEACON_ID = ?;");
             preparedStatement.setString(1, id);
 
             ResultSet rs = preparedStatement.executeQuery();
