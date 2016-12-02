@@ -10,9 +10,18 @@ public class CrestResponse {
     private String routeDescription;
     private String statusDescripton;
     private String predictedValue;
+    private String sessionToken;
 
     public String getPredictedValue() {
         return predictedValue;
+    }
+
+    public String getSessionToken() {
+        return sessionToken;
+    }
+
+    public void setSessionToken(String sessionToken) {
+        this.sessionToken = sessionToken;
     }
 
     public void setPredictedValue(String predictedValue) {

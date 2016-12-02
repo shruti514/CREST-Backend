@@ -2,6 +2,7 @@ package com.crest.backend.controller;
 
 import com.crest.backend.model.CrestResponse;
 import com.crest.backend.service.BeaconService;
+import com.crest.backend.service.UserService;
 import com.crest.backend.service.WekaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
@@ -17,12 +18,15 @@ import java.io.IOException;
 @Controller
 @Service
 @PropertySource("classpath:/application.properties")
-@RequestMapping("/stops")
+@RequestMapping("/cense")
 public class BeaconsController {
     BeaconService beaconService = new BeaconService();
     CrestResponse crestResponse = new CrestResponse();
     @Autowired
     WekaService wekaService;
+
+    @Autowired
+    UserService userService;
 
     @RequestMapping(value = "/program/test", method = RequestMethod.GET)
     public
@@ -59,6 +63,84 @@ public class BeaconsController {
         crestResponse = wekaService.getWekaModel(tripMonth, service, timeBucket, tripRoute, busNumber);
         return crestResponse;
     }
+
+    @RequestMapping(value = "/user/caregiver/login/{userName}/{password}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    CrestResponse careGiverLogin(@PathVariable("userName") String userName, @PathVariable("password") String password) throws Exception {
+
+        crestResponse = userService.careGiverLogin(userName, password);
+        if (crestResponse.getSessionToken() != null) {
+            return crestResponse;
+        } else {
+            crestResponse.setSessionToken("Invalid user");
+            return crestResponse;
+        }
+
+
+    }
+
+    @RequestMapping(value = "/user/login/{userName}/{password}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    CrestResponse userLogin(@PathVariable("userName") String userName, @PathVariable("password") String password) throws Exception {
+
+        crestResponse = userService.userLogin(userName, password);
+        if (crestResponse.getSessionToken() != null) {
+            return crestResponse;
+        } else {
+            crestResponse.setSessionToken("Invalid user");
+            return crestResponse;
+        }
+
+
+    }
+
+    @RequestMapping(value = "/user/caregiver/register/{firstName}/{lastName}/{contactNumber}/{userName}/{password}", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CrestResponse careGiverRegister(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName,
+                                    @PathVariable("age") String age, @PathVariable("address") String address,
+                                    @PathVariable("contactNumber") String contactNumber, @PathVariable("drivingLicence") String drivingLicence,
+                                    @PathVariable("userName") String userName, @PathVariable("password") String password) throws Exception {
+
+        crestResponse = userService.careGiverRegister(firstName, lastName, age, address, contactNumber, drivingLicence, userName, password);
+
+        return crestResponse;
+
+
+    }
+
+    @RequestMapping(value = "/user/register/{firstName}/{lastName}/{contactNumber}/{age}/{address}/{emergencyContact}" +
+            "/{medicalCondition}/{medication}/{additionalInfo}/{userName}/{password}", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CrestResponse userRegister(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName,
+                               @PathVariable("contactNumber") String contactNumber, @PathVariable("age") String age,
+                               @PathVariable("address") String address, @PathVariable("emergencyContact") String emergencyContact,
+                               @PathVariable("medicalCondition") String medicalCondition, @PathVariable("medication") String medication,
+                               @PathVariable("additionalInfo") String additionalInfo, @PathVariable("userName") String userName,
+                               @PathVariable("password") String password) throws Exception {
+
+        crestResponse = userService.userRegister(firstName, lastName, contactNumber, age, address, emergencyContact, medicalCondition, medication, additionalInfo, userName, password);
+
+        return crestResponse;
+    }
+
+
+    @RequestMapping(value = "/user/schedule/{userNameRider}/{userNameScheduler}/{tripStartTime}/{tripDate}/{source}/{destination}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    CrestResponse userScheduleTrip(@PathVariable("userNameRider") String userNameRider, @PathVariable("userNameScheduler") String userNameScheduler, @PathVariable("tripStartTime") String tripStartTime, @PathVariable("tripDate") String tripDate,
+                                   @PathVariable("source") String source, @PathVariable("destination") String destination) throws Exception {
+
+        crestResponse = userService.scheduleTrip(userNameRider, userNameScheduler, tripStartTime, tripDate, source, destination);
+        return crestResponse;
+
+
+    }
+
+
 
 
 }
