@@ -81,15 +81,15 @@ public class BeaconsController {
     }
 
 
-    @RequestMapping(value = "/user/caregiver/register/{firstName}/{lastName}/{age}/{contactNumber}/{address}/{userName}/{password}", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/caregiver/register/{firstName}/{lastName}/{age}/{contactNumber}/{address}/{emergencyContact}/{userName}/{password}", method = RequestMethod.POST)
     public
     @ResponseBody
     CrestResponse careGiverRegister(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName,
                                     @PathVariable("age") String age, @PathVariable("address") String address,
-                                    @PathVariable("contactNumber") String contactNumber,
+                                    @PathVariable("contactNumber") String contactNumber, @PathVariable("emergencyContact") String emergencyContact,
                                     @PathVariable("userName") String userName, @PathVariable("password") String password) throws Exception {
 
-        crestResponse = userService.careGiverRegister(firstName, lastName, age, address, contactNumber, userName, password);
+        crestResponse = userService.careGiverRegister(firstName, lastName, age, address, contactNumber, emergencyContact, userName, password);
 
         return crestResponse;
 

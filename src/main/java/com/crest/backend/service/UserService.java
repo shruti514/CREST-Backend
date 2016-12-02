@@ -51,7 +51,7 @@ public class UserService {
     }
 
 
-    public CrestResponse careGiverRegister(String firstName, String lastName, String age, String address, String contactNumber, String userName, String password) {
+    public CrestResponse careGiverRegister(String firstName, String lastName, String age, String address, String contactNumber, String emergencyContact, String userName, String password) {
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
@@ -65,7 +65,7 @@ public class UserService {
                 alreadyPresent = r.getInt("COUNT");
             }
             if (alreadyPresent <= 0) {
-                PreparedStatement p = connection.prepareStatement("INSERT INTO CAREGIVER VALUES (?,?,?,?,?,?,?)");
+                PreparedStatement p = connection.prepareStatement("INSERT INTO CAREGIVER VALUES (?,?,?,?,?,?,?,?)");
                 p.setString(1, firstName);
                 p.setString(2, lastName);
                 p.setString(3, contactNumber);
@@ -73,6 +73,7 @@ public class UserService {
                 p.setString(5, address);
                 p.setString(6, userName);
                 p.setString(7, password);
+                p.setString(8, emergencyContact);
                 ResultSet rs = p.executeQuery();
                 while (rs.next()) {
                     result = rs.getString(1);
