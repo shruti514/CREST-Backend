@@ -26,9 +26,9 @@ public class SendPushNotifications {
     }
 
 
-    /*public static void main(String args[]){
+    public static void main(String args[]){
         SendPushNotifications sendPushNotifications = new SendPushNotifications();
-        sendPushNotifications.sendPushNotifications("someuserId","someBusNumber");
-    }*/
+        sendPushNotifications.sendPushNotifications("someuserId","someBusNumber","Started");
+    }
 
 }

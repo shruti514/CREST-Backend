@@ -134,6 +134,8 @@ public class BeaconsController {
     CrestResponse getUserLocation(@PathVariable("userId") String userId, @PathVariable("busNumber") String busNumber, @PathVariable("tripStatus") String tripStatus) throws Exception {
 
         crestResponse = beaconService.getUserLocation(userId, busNumber, tripStatus);
+        SendPushNotifications sendPushNotifications = new SendPushNotifications();
+        sendPushNotifications.sendPushNotifications(userId,busNumber,tripStatus);
         return crestResponse;
 
     }
