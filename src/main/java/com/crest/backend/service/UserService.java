@@ -143,20 +143,23 @@ public class UserService {
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
 
+
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM TRIP WHERE rider_id= ? AND scheduler_id = ? AND 'trip_start_time' = ? AND 'trip_start_date' = ? AND 'source_location' =? AND 'destination_location' =? ;  ");
+            PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM TRIP WHERE rider_id= ? AND scheduler_id = ? AND 'trip_start_time' = ? AND 'trip_start_date' = ? AND 'source_location' = ? AND 'destination_location' = ? ;  ");
             p.setString(1, userNameRider);
             p.setString(2, userNameScheduler);
             p.setString(3, tripStartTime);
             p.setString(4, tripDate);
             p.setString(5, source);
             p.setString(6, destination);
+            System.out.println("In SELECT 1");
 
             ResultSet rs = p.executeQuery();
-            Integer alreadyPresent = 0;
+            Integer alreadyPresent = 5;
             while ((rs.next())) {
-                alreadyPresent = rs.getInt("COUNT");
+                alreadyPresent = rs.getInt(1);
+                System.out.println(rs.getInt(1));
             }
             if (alreadyPresent <= 0) {
                 p = connection.prepareStatement("INSERT INTO TRIP (rider_id,scheduler_id,trip_start_time,trip_start_date,destination_location,source_location) VALUES(?,?,?,?,?,?) ;");
@@ -170,7 +173,7 @@ public class UserService {
 
                 p.executeUpdate();
 
-                p = connection.prepareStatement("Select trip_id from TRIP where rider_id= ? AND scheduler_id = ? AND 'trip_start_time' = ? AND 'trip_start_date' = ? AND 'source_location' =? AND 'destination_location' =? ;  ");
+                p = connection.prepareStatement("Select trip_id from TRIP where rider_id= ? AND scheduler_id = ? AND 'trip_start_time' = ? AND 'trip_start_date' = ? AND 'source_location' = ?  AND 'destination_location' = ? ;  ");
                 p.setString(1, userNameRider);
                 p.setString(2, userNameScheduler);
                 p.setString(3, tripStartTime);
@@ -180,11 +183,13 @@ public class UserService {
                 ResultSet resultSet = p.executeQuery();
                 while (resultSet.next()) {
                     String tripId = resultSet.getString(1);
+                    System.out.println(tripId);
                     crestResponse.setStatusCode("200");
                     crestResponse.setTripId(tripId);
 
 
                 }
+
             } else {
                 crestResponse.setStatusCode("200");
                 crestResponse.setStatusDescripton("Trip already exists");
