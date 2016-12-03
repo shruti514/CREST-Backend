@@ -51,7 +51,7 @@ public class UserService {
     }
 
 
-    public CrestResponse careGiverRegister(String firstName, String lastName, String age, String address, String contactNumber, String emergencyContact, String userName, String password) {
+    public CrestResponse careGiverRegister(String firstName, String lastName, String age, String address, String contactNumber, String userName, String password) {
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
@@ -65,7 +65,7 @@ public class UserService {
                 alreadyPresent = r.getInt("COUNT");
             }
             if (alreadyPresent <= 0) {
-                PreparedStatement p = connection.prepareStatement("INSERT INTO CAREGIVER VALUES (?,?,?,?,?,?,?,?)");
+                PreparedStatement p = connection.prepareStatement("INSERT INTO CAREGIVER VALUES (?,?,?,?,?,?,?)");
                 p.setString(1, firstName);
                 p.setString(2, lastName);
                 p.setString(3, contactNumber);
@@ -73,14 +73,10 @@ public class UserService {
                 p.setString(5, address);
                 p.setString(6, userName);
                 p.setString(7, password);
-                p.setString(8, emergencyContact);
-                ResultSet rs = p.executeQuery();
-                while (rs.next()) {
-                    result = rs.getString(1);
-                    crestResponse.setStatusCode("200");
-                    crestResponse.setStatusDescripton(result);
+                p.executeUpdate();
+                crestResponse.setStatusCode("200");
+                crestResponse.setStatusDescripton(result);
 
-                }
             } else {
                 crestResponse.setStatusCode("200");
                 crestResponse.setStatusDescripton("User already exists");
@@ -123,12 +119,9 @@ public class UserService {
                 p.setString(8, additionalInfo);
                 p.setString(9, userName);
                 p.setString(10, password);
-                ResultSet rs = p.executeQuery();
-                while (rs.next()) {
-                    result = rs.getString(1);
+                p.executeUpdate();
                     crestResponse.setStatusCode("200");
-                    crestResponse.setStatusDescripton(result);
-                }
+                crestResponse.setStatusDescripton("Successful registration");
             } else {
                 crestResponse.setStatusCode("200");
                 crestResponse.setStatusDescripton("UserName already exists");
@@ -149,34 +142,47 @@ public class UserService {
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
-        String tripId = userNameRider + userNameScheduler + tripStartTime + tripDate;
+
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM TRIP WHERE USERNAMERIDER= ? , USERNAMERIDER = ? TRIPSTARTTIME = ?, TRIPDATE = ?, SOURCE =? AND DESTINATION =? ; ");
+            PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM TRIP WHERE rider_id= ? AND scheduler_id = ? AND 'trip_start_time' = ? AND 'trip_start_date' = ? AND 'source_location' =? AND 'destination_location' =? ;  ");
             p.setString(1, userNameRider);
             p.setString(2, userNameScheduler);
             p.setString(3, tripStartTime);
             p.setString(4, tripDate);
             p.setString(5, source);
             p.setString(6, destination);
+
             ResultSet rs = p.executeQuery();
             Integer alreadyPresent = 0;
             while ((rs.next())) {
                 alreadyPresent = rs.getInt("COUNT");
             }
             if (alreadyPresent <= 0) {
-                PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO TRIP VALUES(?,?,?,?,?,?,?) ;");
-                preparedStatement.setString(1, userNameRider);
-                preparedStatement.setString(2, userNameScheduler);
-                preparedStatement.setString(3, tripStartTime);
-                preparedStatement.setString(4, tripDate);
-                preparedStatement.setString(5, source);
-                preparedStatement.setString(6, destination);
-                preparedStatement.setString(7, tripId);
-                ResultSet r = preparedStatement.executeQuery();
-                while (r.next()) {
+                p = connection.prepareStatement("INSERT INTO TRIP (rider_id,scheduler_id,trip_start_time,trip_start_date,destination_location,source_location) VALUES(?,?,?,?,?,?) ;");
+
+                p.setString(1, userNameRider);
+                p.setString(2, userNameScheduler);
+                p.setString(3, tripStartTime);
+                p.setString(4, tripDate);
+                p.setString(5, destination);
+                p.setString(6, source);
+
+                p.executeUpdate();
+
+                p = connection.prepareStatement("Select trip_id from TRIP where rider_id= ? AND scheduler_id = ? AND 'trip_start_time' = ? AND 'trip_start_date' = ? AND 'source_location' =? AND 'destination_location' =? ;  ");
+                p.setString(1, userNameRider);
+                p.setString(2, userNameScheduler);
+                p.setString(3, tripStartTime);
+                p.setString(4, tripDate);
+                p.setString(5, source);
+                p.setString(6, destination);
+                ResultSet resultSet = p.executeQuery();
+                while (resultSet.next()) {
+                    String tripId = resultSet.getString(1);
                     crestResponse.setStatusCode("200");
-                    crestResponse.setStatusDescripton(tripId);
+                    crestResponse.setTripId(tripId);
+
 
                 }
             } else {

@@ -11,6 +11,15 @@ public class CrestResponse {
     private String statusDescripton;
     private String predictedValue;
     private String userId;
+    private String tripId;
+
+    public String getTripId() {
+        return tripId;
+    }
+
+    public void setTripId(String tripId) {
+        this.tripId = tripId;
+    }
 
     public String getPredictedValue() {
         return predictedValue;

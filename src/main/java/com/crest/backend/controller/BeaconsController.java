@@ -84,15 +84,15 @@ public class BeaconsController {
     }
 
 
-    @RequestMapping(value = "/user/caregiver/register/{firstName}/{lastName}/{age}/{contactNumber}/{address}/{emergencyContact}/{userName}/{password}", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/caregiver/register/{firstName}/{lastName}/{age}/{contactNumber}/{address}/{userName}/{password}", method = RequestMethod.POST)
     public
     @ResponseBody
     CrestResponse careGiverRegister(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName,
                                     @PathVariable("age") String age, @PathVariable("address") String address,
-                                    @PathVariable("contactNumber") String contactNumber, @PathVariable("emergencyContact") String emergencyContact,
+                                    @PathVariable("contactNumber") String contactNumber,
                                     @PathVariable("userName") String userName, @PathVariable("password") String password) throws Exception {
 
-        crestResponse = userService.careGiverRegister(firstName, lastName, age, address, contactNumber, emergencyContact, userName, password);
+        crestResponse = userService.careGiverRegister(firstName, lastName, age, address, contactNumber, userName, password);
 
         return crestResponse;
 
@@ -116,15 +116,25 @@ public class BeaconsController {
     }
 
 
-    @RequestMapping(value = "/user/schedule/{userNameRider}/{userNameScheduler}/{tripStartTime}/{tripDate}/{source}/{destination}", method = RequestMethod.GET)
+    @RequestMapping(value = "/user/schedule/{riderId}/{schedulerId}/{tripStartTime}/{tripDate}/{source}/{destination}", method = RequestMethod.POST)
     public
     @ResponseBody
-    CrestResponse userScheduleTrip(@PathVariable("userNameRider") String userNameRider, @PathVariable("userNameScheduler") String userNameScheduler, @PathVariable("tripStartTime") String tripStartTime, @PathVariable("tripDate") String tripDate,
+    CrestResponse userScheduleTrip(@PathVariable("riderId") String riderId, @PathVariable("schedulerId") String schedulerId, @PathVariable("tripStartTime") String tripStartTime, @PathVariable("tripDate") String tripDate,
                                    @PathVariable("source") String source, @PathVariable("destination") String destination) throws Exception {
 
-        crestResponse = userService.scheduleTrip(userNameRider, userNameScheduler, tripStartTime, tripDate, source, destination);
+        crestResponse = userService.scheduleTrip(riderId, schedulerId, tripStartTime, tripDate, source, destination);
         return crestResponse;
 
+
+    }
+
+    @RequestMapping(value = "/user/{userId}/{busNumber}/{tripStatus}", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CrestResponse getUserLocation(@PathVariable("userId") String userId, @PathVariable("busNumber") String busNumber, @PathVariable("tripStatus") String tripStatus) throws Exception {
+
+        crestResponse = beaconService.getUserLocation(userId, busNumber, tripStatus);
+        return crestResponse;
 
     }
 

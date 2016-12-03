@@ -1,8 +1,6 @@
 package com.crest.backend.service;
 
 import com.crest.backend.com.crest.backend.dao.DatabaseConnection;
-import com.crest.backend.com.crest.backend.dao.FieldNamesConstant;
-import com.crest.backend.com.crest.backend.dao.TableNameConstants;
 import com.crest.backend.model.CrestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +56,7 @@ public class BeaconService {
         try {
             connection = dbConnection.getConnection();
             PreparedStatement p = connection
-                    .prepareStatement("select DISTANCE_IN_STEPS from distance where SOURCE_BUS_STOP_ID = ? and DESTINATION_BUS_STOP_ID = ? ;");
+                    .prepareStatement("select NAVIGATION_INFO from INTERNAL_NAVIGATION where SOURCE_BUS_STOP_ID = ? and DESTINATION_BUS_STOP_ID = ? ;");
             p.setString(1, busStopId1);
             p.setString(2, busStopId2);
             ResultSet rs = p.executeQuery();
@@ -68,6 +66,35 @@ public class BeaconService {
                 crestResponse.setStatusDescripton("Ok");
                 crestResponse.setRouteDescription(result);
             }
+        } catch (Exception e) {
+            crestResponse.setStatusCode("500");
+            crestResponse.setStatusDescripton("Internal Server Error");
+            log.error("Exception at getUserIdFromSessionToken", e);
+
+
+        } finally {
+            dbConnection.closeConnection(connection);
+        }
+        return crestResponse;
+
+    }
+
+    public CrestResponse getUserLocation(String userId, String busNumber, String tripStatus) throws Exception {
+        Connection connection = null;
+        CrestResponse crestResponse = new CrestResponse();
+        DatabaseConnection dbConnection = new DatabaseConnection();
+
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement p = connection
+                    .prepareStatement("INSERT INTO USER_LOCATION VALUES (?,?,?) ;");
+            p.setString(1, userId);
+            p.setString(2, busNumber);
+            p.setString(3, tripStatus);
+            p.executeUpdate();
+            crestResponse.setStatusCode("200");
+            crestResponse.setStatusDescripton("Ok");
+
         } catch (Exception e) {
             crestResponse.setStatusCode("500");
             crestResponse.setStatusDescripton("Internal Server Error");
