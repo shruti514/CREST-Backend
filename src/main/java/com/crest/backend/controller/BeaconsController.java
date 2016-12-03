@@ -1,6 +1,7 @@
 package com.crest.backend.controller;
 
 import com.crest.backend.model.CrestResponse;
+import com.crest.backend.pushAPN.SendPushNotifications;
 import com.crest.backend.service.BeaconService;
 import com.crest.backend.service.UserService;
 import com.crest.backend.service.WekaService;
@@ -32,6 +33,8 @@ public class BeaconsController {
     public
     @ResponseBody
     String programABC() throws IOException {
+        SendPushNotifications sendPushNotifications = new SendPushNotifications();
+        sendPushNotifications.sendPushNotifications("userId","55","Started");
         return "testStringIsWorking";
     }
 
