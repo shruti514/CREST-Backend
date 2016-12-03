@@ -20,9 +20,10 @@ public class UserService {
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
 
-    CrestResponse crestResponse = new CrestResponse();
+
 
     public CrestResponse userLogin(String userName, String password) {
+        CrestResponse crestResponse = new CrestResponse();
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
@@ -53,6 +54,7 @@ public class UserService {
 
     public CrestResponse careGiverRegister(String firstName, String lastName, String age, String address, String contactNumber, String userName, String password) {
         Connection connection = null;
+        CrestResponse crestResponse = new CrestResponse();
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
         try {
@@ -96,6 +98,7 @@ public class UserService {
     public CrestResponse userRegister(String firstName, String lastName, String contactNumber, String age, String address, String emergencyContact,
                                       String careGiverEmail, String additionalInfo, String userName, String password) {
         Connection connection = null;
+        CrestResponse crestResponse = new CrestResponse();
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
         try {
@@ -140,26 +143,27 @@ public class UserService {
 
     public CrestResponse scheduleTrip(String userNameRider, String userNameScheduler, String tripStartTime, String tripDate, String source, String destination) {
         Connection connection = null;
+        CrestResponse crestResponse = new CrestResponse();
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
 
 
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM TRIP WHERE rider_id= ? AND scheduler_id = ? AND 'trip_start_time' = ? AND 'trip_start_date' = ? AND 'source_location' = ? AND 'destination_location' = ? ;  ");
+            PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM TRIP WHERE rider_id= ? AND scheduler_id = ? AND trip_start_time = ? AND trip_start_date = ? AND source_location = ? AND destination_location = ? ;  ");
             p.setString(1, userNameRider);
             p.setString(2, userNameScheduler);
             p.setString(3, tripStartTime);
             p.setString(4, tripDate);
             p.setString(5, source);
             p.setString(6, destination);
-            System.out.println("In SELECT 1");
 
             ResultSet rs = p.executeQuery();
-            Integer alreadyPresent = 5;
+            Integer alreadyPresent = 0;
             while ((rs.next())) {
                 alreadyPresent = rs.getInt(1);
-                System.out.println(rs.getInt(1));
+                System.out.println(alreadyPresent);
+
             }
             if (alreadyPresent <= 0) {
                 p = connection.prepareStatement("INSERT INTO TRIP (rider_id,scheduler_id,trip_start_time,trip_start_date,destination_location,source_location) VALUES(?,?,?,?,?,?) ;");
@@ -173,7 +177,7 @@ public class UserService {
 
                 p.executeUpdate();
 
-                p = connection.prepareStatement("Select trip_id from TRIP where rider_id= ? AND scheduler_id = ? AND 'trip_start_time' = ? AND 'trip_start_date' = ? AND 'source_location' = ?  AND 'destination_location' = ? ;  ");
+                p = connection.prepareStatement("Select trip_id from TRIP where rider_id= ? AND scheduler_id = ? AND trip_start_time = ? AND trip_start_date = ? AND source_location = ?  AND destination_location = ? ;  ");
                 p.setString(1, userNameRider);
                 p.setString(2, userNameScheduler);
                 p.setString(3, tripStartTime);
@@ -183,11 +187,8 @@ public class UserService {
                 ResultSet resultSet = p.executeQuery();
                 while (resultSet.next()) {
                     String tripId = resultSet.getString(1);
-                    System.out.println(tripId);
                     crestResponse.setStatusCode("200");
                     crestResponse.setTripId(tripId);
-
-
                 }
 
             } else {
