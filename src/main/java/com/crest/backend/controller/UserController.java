@@ -2,6 +2,7 @@ package com.crest.backend.controller;
 
 
 import com.crest.backend.model.CrestResponse;
+import com.crest.backend.model.Dependant;
 import com.crest.backend.pushAPN.SendPushNotifications;
 import com.crest.backend.service.BeaconService;
 import com.crest.backend.service.UserService;
@@ -10,6 +11,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -92,6 +95,15 @@ public class UserController {
         sendPushNotifications.sendPushNotifications(userId, busNumber, tripStatus);
         return crestResponse;
 
+    }
+
+
+    @RequestMapping(value = "/caregiver/{caregiverId}/dependents", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Dependant> getAllPatients(@PathVariable("caregiverId") String caregiverId) throws Exception {
+
+        List<Dependant> allDependents = userService.getAllDependents(caregiverId);
+        return allDependents;
     }
 
 

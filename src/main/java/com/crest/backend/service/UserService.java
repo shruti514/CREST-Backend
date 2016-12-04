@@ -2,6 +2,7 @@ package com.crest.backend.service;
 
 import com.crest.backend.com.crest.backend.dao.DatabaseConnection;
 import com.crest.backend.model.CrestResponse;
+import com.crest.backend.model.Dependant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.crest.backend.com.crest.backend.dao.TableNameConstants.*;
 
@@ -298,6 +301,78 @@ public class UserService {
             dbConnection.closeConnection(connection);
         }
         return crestResponse;
+    }
+
+    public List<Dependant> getAllDependents(String caregiverId) {
+        List<Integer> dependantUserIds = getDependantUserIds(caregiverId);
+        List<Dependant> toReturn = new ArrayList<>();
+        for(Integer userId : dependantUserIds){
+            Dependant dependant = getDependentById(Integer.toString(userId));
+            toReturn.add(dependant);
+        }
+        return toReturn;
+    }
+
+    private Dependant getDependentById(String userId) {
+        Connection connection = null;
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        Dependant dependant = new Dependant();
+        try {
+            log.info("Fetching a details of dependant with id :=> "+ userId);
+            connection = dbConnection.getConnection();
+
+            PreparedStatement p = connection.prepareStatement("SELECT * from DEPENDANTS where user_id=?");
+            p.setString(1, userId);
+            ResultSet resultSet = p.executeQuery();
+            log.info("Details fetched for dependant with id :=> "+ userId);
+            while(resultSet.next()){
+                String id = resultSet.getString(1);
+                String firstName = resultSet.getString(2);
+                String lastName = resultSet.getString(3);
+                String email = resultSet.getString(4);
+                String phone = resultSet.getString(5);
+                String age = resultSet.getString(6);
+                String description = resultSet.getString(7);
+                String emergencyContact = resultSet.getString(8);
+                String address = resultSet.getString(9);
+
+                dependant.setId(id);
+                dependant.setName(firstName+" "+lastName);
+                dependant.setAddress(address);
+                dependant.setEmergencyContactNumber(emergencyContact);
+                dependant.setPhoneNumber(phone);
+                dependant.setProfileImage(firstName);
+                dependant.setEmailId(email);
+            }
+        } catch (Exception e) {
+            log.error("Exception at getDependantUserIds", e);
+        } finally {
+            dbConnection.closeConnection(connection);
+        }
+        return dependant;
+    }
+
+    private List<Integer> getDependantUserIds(String caregiverId) {
+        Connection connection = null;
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        List<Integer> dependants = new ArrayList<>();
+        try {
+            log.info("Fetching a list of dependants for caregiver with id :=> "+ caregiverId);
+            connection = dbConnection.getConnection();
+
+            PreparedStatement p = connection.prepareStatement("SELECT dependant_id from CAREGIVER_DEPENDANT where caregiver_id=?");
+            p.setString(1, caregiverId);
+            ResultSet resultSet = p.executeQuery();
+            log.info("List of dependants fetched for caregiver with id :=> "+ caregiverId);
+            while(resultSet.next()){
+                dependants.add(resultSet.getInt(1));
+            }
+        } catch (Exception e) {
+            log.error("Exception at getDependantUserIds", e);
+        } finally {
+            dbConnection.closeConnection(connection);
+        }
+        return dependants;
     }
 
 
