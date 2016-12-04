@@ -1,0 +1,99 @@
+package com.crest.backend.controller;
+
+
+import com.crest.backend.model.CrestResponse;
+import com.crest.backend.pushAPN.SendPushNotifications;
+import com.crest.backend.service.BeaconService;
+import com.crest.backend.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.*;
+
+
+/**
+ * Created by sgangras on 12/4/16.
+ */
+@Controller
+@Service
+@PropertySource("classpath:/application.properties")
+@RequestMapping("/cense")
+public class UserController {
+    private BeaconService beaconService = new BeaconService();
+    private CrestResponse crestResponse = new CrestResponse();
+
+    @Autowired
+    private UserService userService;
+
+    @RequestMapping(value = "/user/login/{userName}/{password}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    CrestResponse userLogin(@PathVariable("userName") String userName, @PathVariable("password") String password) throws Exception {
+
+        crestResponse = userService.userLogin(userName, password);
+        if (crestResponse.getUserId() != null) {
+            return crestResponse;
+        } else {
+            crestResponse.setStatusDescripton("Invalid user");
+            return crestResponse;
+        }
+    }
+
+
+    @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CrestResponse careGiverRegister(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
+                                    @RequestParam("age") String age, @RequestParam("address") String address,
+                                    @RequestParam("contactNumber") String contactNumber,
+                                    @RequestParam("email") String userName, @RequestParam("password") String password) throws Exception {
+
+        crestResponse = userService.careGiverRegister(firstName, lastName, age, address, contactNumber, userName, password);
+
+        return crestResponse;
+
+
+    }
+
+    @RequestMapping(value = "/user/register/{firstName}/{lastName}/{contactNumber}/{age}/{address}/{emergencyContact}" +
+            "/{careGiverEmail}/{additionalInfo}/{userName}/{password}", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CrestResponse userRegister(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName,
+                               @PathVariable("contactNumber") String contactNumber, @PathVariable("age") String age,
+                               @PathVariable("address") String address, @PathVariable("emergencyContact") String emergencyContact,
+                               @PathVariable("careGiverEmail") String careGiverEmail,
+                               @PathVariable("additionalInfo") String additionalInfo, @PathVariable("userName") String userName,
+                               @PathVariable("password") String password) throws Exception {
+
+        crestResponse = userService.userRegister(firstName, lastName, contactNumber, age, address, emergencyContact, careGiverEmail, additionalInfo, userName, password);
+
+        return crestResponse;
+    }
+
+
+    @RequestMapping(value = "/user/schedule/{riderId}/{schedulerId}/{tripStartTime}/{tripDate}/{source}/{destination}", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CrestResponse userScheduleTrip(@PathVariable("riderId") String riderId, @PathVariable("schedulerId") String schedulerId, @PathVariable("tripStartTime") String tripStartTime, @PathVariable("tripDate") String tripDate,
+                                   @PathVariable("source") String source, @PathVariable("destination") String destination) throws Exception {
+
+        crestResponse = userService.scheduleTrip(riderId, schedulerId, tripStartTime, tripDate, source, destination);
+        return crestResponse;
+    }
+
+    @RequestMapping(value = "/user/{userId}/{busNumber}/{tripStatus}", method = RequestMethod.POST)
+    public
+    @ResponseBody
+    CrestResponse getUserLocation(@PathVariable("userId") String userId, @PathVariable("busNumber") String busNumber, @PathVariable("tripStatus") String tripStatus) throws Exception {
+
+        crestResponse = beaconService.getUserLocation(userId, busNumber, tripStatus);
+        SendPushNotifications sendPushNotifications = new SendPushNotifications();
+        sendPushNotifications.sendPushNotifications(userId, busNumber, tripStatus);
+        return crestResponse;
+
+    }
+
+
+}
