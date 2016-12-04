@@ -56,18 +56,17 @@ public class UserController {
 
     }
 
-    @RequestMapping(value = "/user/register/{firstName}/{lastName}/{contactNumber}/{age}/{address}/{emergencyContact}" +
-            "/{careGiverEmail}/{additionalInfo}/{userName}/{password}", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/dependant/register/", method = RequestMethod.POST)
     public
     @ResponseBody
-    CrestResponse userRegister(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName,
-                               @PathVariable("contactNumber") String contactNumber, @PathVariable("age") String age,
-                               @PathVariable("address") String address, @PathVariable("emergencyContact") String emergencyContact,
-                               @PathVariable("careGiverEmail") String careGiverEmail,
-                               @PathVariable("additionalInfo") String additionalInfo, @PathVariable("userName") String userName,
-                               @PathVariable("password") String password) throws Exception {
+    CrestResponse userRegister(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
+                               @RequestParam("contactNumber") String contactNumber, @RequestParam("age") String age,
+                               @RequestParam("address") String address, @RequestParam("emergencyContact") String emergencyContact,
+                               @RequestParam("careGiverId") String careGiverId,
+                               @RequestParam("additionalInfo") String additionalInfo, @RequestParam("email") String email,
+                               @RequestParam("password") String password) throws Exception {
 
-        crestResponse = userService.userRegister(firstName, lastName, contactNumber, age, address, emergencyContact, careGiverEmail, additionalInfo, userName, password);
+        crestResponse = userService.userRegister(firstName, lastName, contactNumber, age, address, emergencyContact, careGiverId, additionalInfo, email, password);
 
         return crestResponse;
     }
