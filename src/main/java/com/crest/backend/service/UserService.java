@@ -1,8 +1,10 @@
 package com.crest.backend.service;
 
 import com.crest.backend.com.crest.backend.dao.DatabaseConnection;
+import com.crest.backend.model.Caregiver;
 import com.crest.backend.model.CrestResponse;
 import com.crest.backend.model.Dependant;
+import com.crest.backend.model.DependantsProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -304,7 +306,7 @@ public class UserService {
     }
 
     public List<Dependant> getAllDependents(String caregiverId) {
-        List<Integer> dependantUserIds = getDependantUserIds(caregiverId);
+        List<Integer> dependantUserIds = getDependantUserIdsByCaregiverId(caregiverId);
         List<Dependant> toReturn = new ArrayList<>();
         for(Integer userId : dependantUserIds){
             Dependant dependant = getDependentById(Integer.toString(userId));
@@ -345,14 +347,14 @@ public class UserService {
                 dependant.setEmailId(email);
             }
         } catch (Exception e) {
-            log.error("Exception at getDependantUserIds", e);
+            log.error("Exception at getDependantUserIdsByCaregiverId", e);
         } finally {
             dbConnection.closeConnection(connection);
         }
         return dependant;
     }
 
-    private List<Integer> getDependantUserIds(String caregiverId) {
+    private List<Integer> getDependantUserIdsByCaregiverId(String caregiverId) {
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         List<Integer> dependants = new ArrayList<>();
@@ -368,11 +370,81 @@ public class UserService {
                 dependants.add(resultSet.getInt(1));
             }
         } catch (Exception e) {
-            log.error("Exception at getDependantUserIds", e);
+            log.error("Exception at getDependantUserIdsByCaregiverId", e);
         } finally {
             dbConnection.closeConnection(connection);
         }
         return dependants;
+    }
+
+    public DependantsProfile getDependantsProfile(String userId) {
+        Dependant dependant = getDependentById(userId);
+        Caregiver caregiver = getCaregiverForDependant(userId);
+        DependantsProfile dependantsProfile =  new DependantsProfile();
+        dependantsProfile.setCaregiver(caregiver);
+        dependantsProfile.setDependant(dependant);
+        return dependantsProfile;
+    }
+
+    private Caregiver getCaregiverForDependant(String dependantId){
+
+        int careGiverIdForDependant = getCaregiverIdForDependant(dependantId);
+
+        Connection connection = null;
+        Caregiver  caregiver = new Caregiver();
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        try {
+            log.info("Fetching a single of caregiver for a dependant with id :=> " + dependantId);
+            connection = dbConnection.getConnection();
+
+            PreparedStatement p = connection.prepareStatement("SELECT * from CAREGIVER where user_id=?");
+            p.setInt(1, careGiverIdForDependant);
+            ResultSet resultSet = p.executeQuery();
+            while(resultSet.next()){
+                String userId = resultSet.getString(1);
+                String firstName = resultSet.getString(2);
+                String lastName = resultSet.getString(3);
+                String address = resultSet.getString(4);
+                String phone = resultSet.getString(5);
+                String age = resultSet.getString(6);
+                String email = resultSet.getString(7);
+
+                caregiver.setId(userId);
+                caregiver.setProfileImage(firstName);
+                caregiver.setName(firstName+" "+lastName);
+                caregiver.setAddress(address);
+                caregiver.setContactNumber(phone);
+                caregiver.setAge(age);
+                caregiver.setEmail(email);
+            }
+        }catch (Exception e){
+            log.error("Error fetching a caregiver for dependant :=> "+dependantId, e);
+        }
+        return caregiver;
+    }
+
+    private int getCaregiverIdForDependant(String dependantId) {
+        Connection connection = null;
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        int careGiverId = 0;
+        try {
+            log.info("Fetching a single of caregiver for a dependant with id :=> "+ dependantId);
+            connection = dbConnection.getConnection();
+
+            PreparedStatement p = connection.prepareStatement("SELECT caregiver_id from CAREGIVER_DEPENDANT where dependant_id=?");
+            p.setString(1, dependantId);
+            ResultSet resultSet = p.executeQuery();
+            log.info("List of caregivers fetched for dependant with id :=> "+ dependantId);
+            log.info("List size :=> ");
+            while(resultSet.next()){
+                careGiverId = resultSet.getInt(1);
+            }
+        } catch (Exception e) {
+            log.error("Exception at getCaregiverIdForDependant", e);
+        } finally {
+            dbConnection.closeConnection(connection);
+        }
+        return careGiverId;
     }
 
 

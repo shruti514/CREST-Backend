@@ -11,13 +11,14 @@ public class Dependant {
     private String name;
     private String address;
     private String phoneNumber;
-    private String emergencyContactNumber;
     private String profileImage;
-    private String emergencyContactName;
     private String currentTripStatus;
     private String currentLocation;
     private String id;
     private String emailId;
+    private String emergencyContactNumber;
+    private String emergencyContactName;
+
 
     public String getName() {
         return name;

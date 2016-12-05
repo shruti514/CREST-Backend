@@ -3,6 +3,7 @@ package com.crest.backend.controller;
 
 import com.crest.backend.model.CrestResponse;
 import com.crest.backend.model.Dependant;
+import com.crest.backend.model.DependantsProfile;
 import com.crest.backend.pushAPN.SendPushNotifications;
 import com.crest.backend.service.BeaconService;
 import com.crest.backend.service.UserService;
@@ -104,6 +105,14 @@ public class UserController {
 
         List<Dependant> allDependents = userService.getAllDependents(caregiverId);
         return allDependents;
+    }
+
+    @RequestMapping(value = "/dependent/{userId}/profile", method = RequestMethod.GET)
+    @ResponseBody
+    public DependantsProfile getDependantsProfile(@PathVariable("userId") String userId) throws Exception {
+
+        DependantsProfile dependantsProfile = userService.getDependantsProfile(userId);
+        return dependantsProfile;
     }
 
 
