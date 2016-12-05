@@ -71,7 +71,8 @@ public class UserController {
     public
     @ResponseBody
     CrestResponse userScheduleTrip(@RequestBody Map<String,String> requestBody) throws Exception {
-        crestResponse = userService.scheduleTrip(requestBody.get("riderId"), requestBody.get("schedulerId"), requestBody.get("tripStartTime"), requestBody.get("tripDate"), requestBody.get("source"), requestBody.get("destination");
+        crestResponse = userService.scheduleTrip(requestBody.get("riderId"), requestBody.get("schedulerId"), requestBody.get("tripStartTime"),
+                requestBody.get("tripDate"), requestBody.get("source"), requestBody.get("destination"));
         return crestResponse;
     }
 
