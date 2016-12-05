@@ -238,18 +238,17 @@ public class UserService {
     }
 
 
-    public CrestResponse scheduleTrip(String userNameRider, String userNameScheduler, String tripStartTime, String tripDate, String source, String destination) {
+    public CrestResponse scheduleTrip(String riderId, String schedulerId, String tripStartTime, String tripDate, String source, String destination) {
         Connection connection = null;
         CrestResponse crestResponse = new CrestResponse();
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
 
-
         try {
             connection = dbConnection.getConnection();
             PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM TRIP WHERE rider_id= ? AND scheduler_id = ? AND trip_start_time = ? AND trip_start_date = ? AND source_location = ? AND destination_location = ? ;  ");
-            p.setString(1, userNameRider);
-            p.setString(2, userNameScheduler);
+            p.setString(1, riderId);
+            p.setString(2, schedulerId);
             p.setString(3, tripStartTime);
             p.setString(4, tripDate);
             p.setString(5, source);
@@ -265,8 +264,8 @@ public class UserService {
             if (alreadyPresent <= 0) {
                 p = connection.prepareStatement("INSERT INTO TRIP (rider_id,scheduler_id,trip_start_time,trip_start_date,destination_location,source_location) VALUES(?,?,?,?,?,?) ;");
 
-                p.setString(1, userNameRider);
-                p.setString(2, userNameScheduler);
+                p.setString(1, riderId);
+                p.setString(2, schedulerId);
                 p.setString(3, tripStartTime);
                 p.setString(4, tripDate);
                 p.setString(5, destination);
@@ -275,8 +274,8 @@ public class UserService {
                 p.executeUpdate();
 
                 p = connection.prepareStatement("Select trip_id from TRIP where rider_id= ? AND scheduler_id = ? AND trip_start_time = ? AND trip_start_date = ? AND source_location = ?  AND destination_location = ? ;  ");
-                p.setString(1, userNameRider);
-                p.setString(2, userNameScheduler);
+                p.setString(1, riderId);
+                p.setString(2, schedulerId);
                 p.setString(3, tripStartTime);
                 p.setString(4, tripDate);
                 p.setString(5, source);

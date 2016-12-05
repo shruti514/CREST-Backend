@@ -48,8 +48,8 @@ public class UserController {
     @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST)
     public
     @ResponseBody
-    CrestResponse careGiverRegister(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
-                                    @RequestParam("age") String age, @RequestParam("address") String address,
+    CrestResponse careGiverRegister(@RequestParam("firstName") String firstName, @RequestParam(value = "lastName", required = false) String lastName,
+                                    @RequestParam(value = "age", required = false) String age, @RequestParam(value = "address", required = false) String address,
                                     @RequestParam("contactNumber") String contactNumber,
                                     @RequestParam("email") String userName, @RequestParam("password") String password) throws Exception {
 
@@ -76,11 +76,11 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/user/schedule/{riderId}/{schedulerId}/{tripStartTime}/{tripDate}/{source}/{destination}", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/schedule/", method = RequestMethod.POST)
     public
     @ResponseBody
-    CrestResponse userScheduleTrip(@PathVariable("riderId") String riderId, @PathVariable("schedulerId") String schedulerId, @PathVariable("tripStartTime") String tripStartTime, @PathVariable("tripDate") String tripDate,
-                                   @PathVariable("source") String source, @PathVariable("destination") String destination) throws Exception {
+    CrestResponse userScheduleTrip(@RequestParam("riderId") String riderId, @RequestParam("schedulerId") String schedulerId, @RequestParam("tripStartTime") String tripStartTime, @RequestParam("tripDate") String tripDate,
+                                   @RequestParam("source") String source, @RequestParam("destination") String destination) throws Exception {
 
         crestResponse = userService.scheduleTrip(riderId, schedulerId, tripStartTime, tripDate, source, destination);
         return crestResponse;
