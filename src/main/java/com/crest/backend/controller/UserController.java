@@ -99,6 +99,14 @@ public class UserController {
         return trips;
     }
 
+    @RequestMapping(value = "/caregiver/{userId}/trips/", method = RequestMethod.GET,produces = "application/json")
+    public
+    @ResponseBody
+    List<Trip> getTripsScheduledByCaregiver(@PathVariable String userId ) throws Exception {
+        List<Trip> trips = userService.getTripsScheduledByCaregiver(userId);
+        return trips;
+    }
+
 
     @RequestMapping(value = "/user/{userId}/{busNumber}/{tripStatus}", method = RequestMethod.POST)
     public

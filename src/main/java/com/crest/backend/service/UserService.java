@@ -513,6 +513,46 @@ public class UserService {
         return crestResponse;
     }
 
+    public List<Trip> getTripsScheduledByCaregiver(String userId) {
+        Connection connection = null;
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        List<Trip> trips = new ArrayList<>();
+        try {
+            log.info("Fetching a all trips scheduled by caregiver :=> "+ userId);
+            connection = dbConnection.getConnection();
+
+            PreparedStatement p = connection.prepareStatement("SELECT * from TRIP where scheduler_id=?");
+            p.setString(1, userId);
+            ResultSet resultSet = p.executeQuery();
+            log.info("List of trips fetched for caregiver with id :=> "+ userId);
+            while(resultSet.next()){
+                String tripId = resultSet.getString(1);
+                String riderId = resultSet.getString(2);
+                String schedulerId = resultSet.getString(3);
+                String startTime = resultSet.getString(4);
+                String tripDate = resultSet.getString(5);
+                String destinationLocation = resultSet.getString(6);
+                String sourceLocation = resultSet.getString(7);
+
+                Trip trip = new Trip();
+                trip.setTripId(tripId);
+                trip.setRiderId(riderId);
+                trip.setSchedulerId(schedulerId);
+                trip.setTripStartTime(startTime);
+                trip.setTripDate(tripDate);
+                trip.setSource(sourceLocation);
+                trip.setDestination(destinationLocation);
+
+                trips.add(trip);
+            }
+        } catch (Exception e) {
+            log.error("Exception at getTripsScheduledByCaregiver", e);
+        } finally {
+            dbConnection.closeConnection(connection);
+        }
+        return trips;
+    }
+
     private enum Role {
         CAREGIVER, DEPENDANT
     }
