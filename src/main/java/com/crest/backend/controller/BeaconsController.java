@@ -38,6 +38,16 @@ public class BeaconsController {
         return "testStringIsWorking";
     }
 
+    @RequestMapping(value = "/user/{userId}/sendpushnotification/", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    String sendPushNotification(@PathVariable String userId) throws IOException {
+        SendPushNotifications sendPushNotifications = new SendPushNotifications();
+        sendPushNotifications.sendFallPushNotifications(userId);
+        return "Notification Sent";
+    }
+
+
     @RequestMapping(value = "/station/{beaconId}", method = RequestMethod.GET)
     public
     @ResponseBody

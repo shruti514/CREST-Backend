@@ -312,7 +312,7 @@ public class UserService {
         return toReturn;
     }
 
-    private Dependant getDependentById(String userId) {
+    public Dependant getDependentById(String userId) {
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         Dependant dependant = new Dependant();
