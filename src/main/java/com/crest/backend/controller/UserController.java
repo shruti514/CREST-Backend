@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -45,15 +46,13 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST,consumes ="application/json",produces = "application/json" )
     public
     @ResponseBody
-    CrestResponse careGiverRegister(@RequestParam("firstName") String firstName, @RequestParam(value = "lastName", required = false) String lastName,
-                                    @RequestParam(value = "age", required = false) String age, @RequestParam(value = "address", required = false) String address,
-                                    @RequestParam("contactNumber") String contactNumber,
-                                    @RequestParam("email") String userName, @RequestParam("password") String password) throws Exception {
+    CrestResponse careGiverRegister(@RequestBody Map<String,Object> request) throws Exception {
 
-        crestResponse = userService.careGiverRegister(firstName, lastName, age, address, contactNumber, userName, password);
+
+        crestResponse = userService.careGiverRegister((String)request.get("firstName"), (String)request.get("lastName"), (String)request.get("age"), (String)request.get("address"), (String)request.get("contactNumber"),(String) request.get("email"), (String)request.get("password"));
 
         return crestResponse;
 
@@ -76,7 +75,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/user/schedule/", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/schedule/", method = RequestMethod.POST,consumes = "application/json")
     public
     @ResponseBody
     CrestResponse userScheduleTrip(@RequestParam("riderId") String riderId, @RequestParam("schedulerId") String schedulerId, @RequestParam("tripStartTime") String tripStartTime, @RequestParam("tripDate") String tripDate,
