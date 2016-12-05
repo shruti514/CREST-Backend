@@ -46,36 +46,28 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST,consumes ="application/json",produces = "application/json" )
+    @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public
     @ResponseBody
-    CrestResponse careGiverRegister(@RequestBody Map<String,Object> request) throws Exception {
-
-
-        crestResponse = userService.careGiverRegister((String)request.get("firstName"), (String)request.get("lastName"), (String)request.get("age"), (String)request.get("address"), (String)request.get("contactNumber"),(String) request.get("email"), (String)request.get("password"));
+    CrestResponse careGiverRegister(@RequestBody Map<String, String> request) throws Exception {
+        crestResponse = userService.careGiverRegister((String) request.get("firstName"), (String) request.get("lastName"), (String) request.get("age"), (String) request.get("address"), (String) request.get("contactNumber"), (String) request.get("email"), (String) request.get("password"));
 
         return crestResponse;
-
-
     }
 
-    @RequestMapping(value = "/user/dependant/register/", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/dependant/register/", method = RequestMethod.POST,consumes = "application/json", produces = "application/json")
     public
     @ResponseBody
-    CrestResponse userRegister(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName,
-                               @RequestParam("contactNumber") String contactNumber, @RequestParam("age") String age,
-                               @RequestParam("address") String address, @RequestParam("emergencyContact") String emergencyContact,
-                               @RequestParam("careGiverId") String careGiverId,
-                               @RequestParam("additionalInfo") String additionalInfo, @RequestParam("email") String email,
-                               @RequestParam("password") String password) throws Exception {
+    CrestResponse userRegister(@RequestBody Map<String,String> requestBody) throws Exception {
 
-        crestResponse = userService.userRegister(firstName, lastName, contactNumber, age, address, emergencyContact, careGiverId, additionalInfo, email, password);
+        crestResponse = userService.userRegister(requestBody.get("firstName"), requestBody.get("lastName"), requestBody.get("contactNumber"), requestBody.get("age"),
+                requestBody.get("address"), requestBody.get("emergencyContact"), requestBody.get("careGiverId"), requestBody.get("additionalInfo"), requestBody.get("email"), requestBody.get("password"));
 
         return crestResponse;
     }
 
 
-    @RequestMapping(value = "/user/schedule/", method = RequestMethod.POST,consumes = "application/json")
+    @RequestMapping(value = "/user/schedule/", method = RequestMethod.POST, consumes = "application/json")
     public
     @ResponseBody
     CrestResponse userScheduleTrip(@RequestParam("riderId") String riderId, @RequestParam("schedulerId") String schedulerId, @RequestParam("tripStartTime") String tripStartTime, @RequestParam("tripDate") String tripDate,
