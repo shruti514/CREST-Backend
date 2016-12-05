@@ -39,7 +39,7 @@ public class SendPushNotifications {
 
     public static void main(String args[]){
         SendPushNotifications sendPushNotifications = new SendPushNotifications();
-        sendPushNotifications.sendPushNotifications("someuserId","someBusNumber","Started");
+        sendPushNotifications.sendFallPushNotifications("someuserId");
     }
 
 }

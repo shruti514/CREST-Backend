@@ -15,6 +15,7 @@ public class Trip {
     private String tripDate;
     private String source;
     private String destination;
+    private String riderName;
 
     public String getRiderId() {
         return riderId;
@@ -70,5 +71,13 @@ public class Trip {
 
     public void setDestination(String destination) {
         this.destination = destination;
+    }
+
+    public void setRiderName(String riderName) {
+        this.riderName = riderName;
+    }
+
+    public String getRiderName() {
+        return riderName;
     }
 }

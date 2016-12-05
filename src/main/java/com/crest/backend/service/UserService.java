@@ -534,6 +534,8 @@ public class UserService {
                 String destinationLocation = resultSet.getString(6);
                 String sourceLocation = resultSet.getString(7);
 
+                Dependant dependent = getDependentById(riderId);
+
                 Trip trip = new Trip();
                 trip.setTripId(tripId);
                 trip.setRiderId(riderId);
@@ -542,7 +544,7 @@ public class UserService {
                 trip.setTripDate(tripDate);
                 trip.setSource(sourceLocation);
                 trip.setDestination(destinationLocation);
-
+                trip.setRiderName(dependent.getName());
                 trips.add(trip);
             }
         } catch (Exception e) {
