@@ -1,10 +1,7 @@
 package com.crest.backend.service;
 
 import com.crest.backend.com.crest.backend.dao.DatabaseConnection;
-import com.crest.backend.model.Caregiver;
-import com.crest.backend.model.CrestResponse;
-import com.crest.backend.model.Dependant;
-import com.crest.backend.model.DependantsProfile;
+import com.crest.backend.model.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -166,9 +163,10 @@ public class UserService {
 
 
     public CrestResponse userRegister(String firstName, String lastName, String contactNumber, String age, String address, String emergencyContact,
-                                      String careGiverId, String additionalInfo, String emailId, String password) {
+                                      String careGiverId, String additionalInfo, String emailId, String dateOfBirth) {
         CrestResponse crestResponse = new CrestResponse();
         try {
+            String password = dateOfBirth.replace("-","");
             int dependantUserId = saveUser(emailId, password, DEPENDANT);
             int dependantSaved = saveDependant(Integer.toString(dependantUserId), firstName, lastName, contactNumber, age, address, emergencyContact, careGiverId, additionalInfo, emailId, password);
             int updatedRelation = addCaregiverDependantRelation(Integer.toString(dependantUserId), careGiverId);
@@ -192,7 +190,7 @@ public class UserService {
             log.info("Adding relation :=> [Caregiver:"+ careGiverId+",Dependant:"+dependantUserId+"]");
             connection = dbConnection.getConnection();
 
-            PreparedStatement p = connection.prepareStatement("INSERT INTO CAREGIVER_DEPENDANT VALUES (?,?)");
+            PreparedStatement p = connection.prepareStatement("INSERT INTO CAREGIVER_DEPENDANT (caregiver_id, dependant_id) VALUES (?,?)");
             p.setString(1, careGiverId);
             p.setString(2, dependantUserId);
             int updateStatus = p.executeUpdate();
@@ -446,6 +444,74 @@ public class UserService {
         return careGiverId;
     }
 
+    public List<Trip> getUserSchedule(String dependantId) {
+        Connection connection = null;
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        List<Trip> trips = new ArrayList<>();
+        try {
+            log.info("Fetching a schedule for a dependant rider with id :=> "+ dependantId);
+            connection = dbConnection.getConnection();
+
+            PreparedStatement p = connection.prepareStatement("SELECT * from TRIP where rider_id=?");
+            p.setString(1, dependantId);
+            ResultSet resultSet = p.executeQuery();
+            log.info("List of trips fetched for dependant with id :=> "+ dependantId);
+            while(resultSet.next()){
+                String tripId = resultSet.getString(1);
+                String riderId = resultSet.getString(2);
+                String schedulerId = resultSet.getString(3);
+                String startTime = resultSet.getString(4);
+                String tripDate = resultSet.getString(5);
+                String destinationLocation = resultSet.getString(6);
+                String sourceLocation = resultSet.getString(7);
+
+                Trip trip = new Trip();
+                trip.setTripId(tripId);
+                trip.setRiderId(riderId);
+                trip.setSchedulerId(schedulerId);
+                trip.setTripStartTime(startTime);
+                trip.setTripDate(tripDate);
+                trip.setSource(sourceLocation);
+                trip.setDestination(destinationLocation);
+
+                trips.add(trip);
+            }
+        } catch (Exception e) {
+            log.error("Exception at getCaregiverIdForDependant", e);
+        } finally {
+            dbConnection.closeConnection(connection);
+        }
+        return trips;
+    }
+
+    public CrestResponse dependantLogin(String birthdate) {
+        CrestResponse crestResponse = new CrestResponse();
+        Connection connection = null;
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        String result = "";
+        try {
+            connection = dbConnection.getConnection();
+            PreparedStatement p = connection.prepareStatement("select ID  as ID from " + USER + " where password=? and role=?;");
+            p.setString(1, birthdate);
+            p.setString(2, DEPENDANT);
+            ResultSet rs = p.executeQuery();
+            while (rs.next()) {
+                result = rs.getString("ID");
+                crestResponse.setStatusCode("200");
+                crestResponse.setStatusDescripton("Ok");
+                crestResponse.setUserId(result);
+            }
+        } catch (Exception e) {
+            crestResponse.setStatusCode("500");
+            crestResponse.setStatusDescripton("Internal Server Error");
+            log.error("Exception at getUserIdFromSessionToken", e);
+
+
+        } finally {
+            dbConnection.closeConnection(connection);
+        }
+        return crestResponse;
+    }
 
     private enum Role {
         CAREGIVER, DEPENDANT

@@ -4,6 +4,7 @@ package com.crest.backend.controller;
 import com.crest.backend.model.CrestResponse;
 import com.crest.backend.model.Dependant;
 import com.crest.backend.model.DependantsProfile;
+import com.crest.backend.model.Trip;
 import com.crest.backend.pushAPN.SendPushNotifications;
 import com.crest.backend.service.BeaconService;
 import com.crest.backend.service.UserService;
@@ -45,6 +46,20 @@ public class UserController {
         }
     }
 
+    @RequestMapping(value = "/user/login/{birthdate}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    CrestResponse userLogin(@PathVariable("birthdate") String birthdate) throws Exception {
+
+        crestResponse = userService.dependantLogin(birthdate);
+        if (crestResponse.getUserId() != null) {
+            return crestResponse;
+        } else {
+            crestResponse.setStatusDescripton("Invalid user");
+            return crestResponse;
+        }
+    }
+
 
     @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public
@@ -67,7 +82,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/user/schedule/", method = RequestMethod.POST, consumes = "application/json")
+    @RequestMapping(value = "/user/schedule/", method = RequestMethod.POST, consumes = "application/json",produces = "application/json")
     public
     @ResponseBody
     CrestResponse userScheduleTrip(@RequestBody Map<String,String> requestBody) throws Exception {
@@ -75,6 +90,15 @@ public class UserController {
                 requestBody.get("tripDate"), requestBody.get("source"), requestBody.get("destination"));
         return crestResponse;
     }
+
+    @RequestMapping(value = "/user/{userId}/schedule/", method = RequestMethod.GET,produces = "application/json")
+    public
+    @ResponseBody
+    List<Trip> getUserSchedule(@PathVariable String userId ) throws Exception {
+        List<Trip> trips = userService.getUserSchedule(userId);
+        return trips;
+    }
+
 
     @RequestMapping(value = "/user/{userId}/{busNumber}/{tripStatus}", method = RequestMethod.POST)
     public
