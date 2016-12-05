@@ -24,7 +24,7 @@ public class SendPushNotifications {
         Dependant dependent = userService.getDependentById(userId);
         String payload = APNS.newPayload().sound("default").badge(1).alertBody("User "+ dependent.getName() +" has reached bus stop "+
                 bus+". Current trip status is -"+tripStatus).build();
-        String token = "7cb16eacc7ae77a49b532aaf80876ea6c36ecf7f79dce73ce449eb94c4c50d7b";
+        String token = "064b22cac1c1919b71330b23b493d0b86392c05bd9ba1bb40fbafaede1a31df6";
         apnsService.push(token, payload);
     }
 
@@ -32,7 +32,7 @@ public class SendPushNotifications {
         Dependant dependent = userService.getDependentById(userId);
         String payload = APNS.newPayload().sound("default").badge(1).alertBody("Alert - A device fall has been detected on "+ dependent.getName()
                 +" device.").build();
-        String token = "7cb16eacc7ae77a49b532aaf80876ea6c36ecf7f79dce73ce449eb94c4c50d7b";
+        String token = "064b22cac1c1919b71330b23b493d0b86392c05bd9ba1bb40fbafaede1a31df6";
         apnsService.push(token, payload);
     }
 
