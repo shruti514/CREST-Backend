@@ -50,7 +50,7 @@ public class UserController {
     public
     @ResponseBody
     CrestResponse careGiverRegister(@RequestBody Map<String, String> request) throws Exception {
-        crestResponse = userService.careGiverRegister((String) request.get("firstName"), (String) request.get("lastName"), (String) request.get("age"), (String) request.get("address"), (String) request.get("contactNumber"), (String) request.get("email"), (String) request.get("password"));
+        crestResponse = userService.careGiverRegister(request.get("firstName"), request.get("lastName"),request.get("age"), request.get("address"), request.get("contactNumber"), request.get("email"),request.get("password"));
 
         return crestResponse;
     }
@@ -61,7 +61,7 @@ public class UserController {
     CrestResponse userRegister(@RequestBody Map<String,String> requestBody) throws Exception {
 
         crestResponse = userService.userRegister(requestBody.get("firstName"), requestBody.get("lastName"), requestBody.get("contactNumber"), requestBody.get("age"),
-                requestBody.get("address"), requestBody.get("emergencyContact"), requestBody.get("careGiverId"), requestBody.get("additionalInfo"), requestBody.get("email"), requestBody.get("password"));
+                requestBody.get("address"), requestBody.get("emergencyContact"), requestBody.get("careGiverId"), requestBody.get("additionalInfo"), requestBody.get("email"), requestBody.get("dateOfBirth"));
 
         return crestResponse;
     }
@@ -70,10 +70,8 @@ public class UserController {
     @RequestMapping(value = "/user/schedule/", method = RequestMethod.POST, consumes = "application/json")
     public
     @ResponseBody
-    CrestResponse userScheduleTrip(@RequestParam("riderId") String riderId, @RequestParam("schedulerId") String schedulerId, @RequestParam("tripStartTime") String tripStartTime, @RequestParam("tripDate") String tripDate,
-                                   @RequestParam("source") String source, @RequestParam("destination") String destination) throws Exception {
-
-        crestResponse = userService.scheduleTrip(riderId, schedulerId, tripStartTime, tripDate, source, destination);
+    CrestResponse userScheduleTrip(@RequestBody Map<String,String> requestBody) throws Exception {
+        crestResponse = userService.scheduleTrip(requestBody.get("riderId"), requestBody.get("schedulerId"), requestBody.get("tripStartTime"), requestBody.get("tripDate"), requestBody.get("source"), requestBody.get("destination");
         return crestResponse;
     }
 
