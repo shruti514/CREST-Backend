@@ -24,7 +24,7 @@ public class Caregiver {
     }
 
     public String getName() {
-        return name;
+        return name.trim();
     }
 
     public void setName(String name) {
@@ -36,7 +36,7 @@ public class Caregiver {
     }
 
     public void setProfileImage(String profileImage) {
-        this.profileImage = profileImage;
+        this.profileImage = profileImage.trim();
     }
 
     public String getAddress() {

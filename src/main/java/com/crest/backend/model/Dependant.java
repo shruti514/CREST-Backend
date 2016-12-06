@@ -53,7 +53,7 @@ public class Dependant {
     }
 
     public String getProfileImage() {
-        return profileImage;
+        return profileImage.trim();
     }
 
     public void setProfileImage(String profileImage) {
