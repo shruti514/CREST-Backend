@@ -336,7 +336,7 @@ public class UserService {
                 String address = resultSet.getString(9);
 
                 dependant.setId(id);
-                dependant.setName(firstName+" "+lastName);
+                dependant.setName(firstName);
                 dependant.setAddress(address);
                 dependant.setEmergencyContactNumber(emergencyContact);
                 dependant.setPhoneNumber(phone);
@@ -408,7 +408,7 @@ public class UserService {
 
                 caregiver.setId(userId);
                 caregiver.setProfileImage(firstName);
-                caregiver.setName(firstName+" "+lastName);
+                caregiver.setName(firstName);
                 caregiver.setAddress(address);
                 caregiver.setContactNumber(phone);
                 caregiver.setAge(age);
