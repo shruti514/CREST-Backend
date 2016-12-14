@@ -21,8 +21,8 @@ import java.io.IOException;
 @PropertySource("classpath:/application.properties")
 @RequestMapping("/cense")
 public class BeaconsController {
-    BeaconService beaconService = new BeaconService();
-    CrestResponse crestResponse = new CrestResponse();
+    private BeaconService beaconService = new BeaconService();
+    private CrestResponse crestResponse = new CrestResponse();
     @Autowired
     WekaService wekaService;
 

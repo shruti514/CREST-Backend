@@ -4,6 +4,9 @@ import com.crest.backend.model.Dependant;
 import com.crest.backend.service.UserService;
 import com.notnoop.apns.APNS;
 import com.notnoop.apns.ApnsService;
+import org.springframework.util.StringUtils;
+
+import static weka.core.pmml.jaxbbindings.LINKFUNCTION.LOG;
 
 /**
  * Created by sgangras on 12/2/16.
@@ -37,9 +40,22 @@ public class SendPushNotifications {
     }
 
 
+    private String getValidMarketingEmailOptIn(String marketingEmailOptIn){
+        if (!StringUtils.isEmpty(marketingEmailOptIn) &&
+                !("Y".equalsIgnoreCase(marketingEmailOptIn) || "N".equalsIgnoreCase(marketingEmailOptIn))) {
+            System.out.println("message=\"Invalid value received for marketingEmailOptIn.\", marketingEmailOptIn = {} method=\"socialLogin\""+
+                    marketingEmailOptIn);
+        }
+        return !StringUtils.isEmpty(marketingEmailOptIn) && "Y".equalsIgnoreCase(marketingEmailOptIn)? "Y":"N";
+    }
+
     public static void main(String args[]){
         SendPushNotifications sendPushNotifications = new SendPushNotifications();
-        sendPushNotifications.sendFallPushNotifications("someuserId");
+
+        String validParam = sendPushNotifications.getValidMarketingEmailOptIn("Y");
+        System.out.println(validParam);
     }
+
+
 
 }

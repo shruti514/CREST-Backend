@@ -13,10 +13,9 @@ public class DatabaseConnection {
     private final static String PASSWORD = "MyNewPass4!";
     private final static String URL = "jdbc:mysql://ec2-54-159-5-230.compute-1.amazonaws.com:3306/CENSE?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
-    //private final static String URL="jdbc:oracle:thin:@rdsinstance.amazonaws.com :3306:RDSDB02";
     private final static String DRIVER = "com.mysql.jdbc.Driver";
 
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * Static method that returns the instance for the singleton
