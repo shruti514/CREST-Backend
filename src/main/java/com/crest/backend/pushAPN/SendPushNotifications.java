@@ -27,7 +27,7 @@ public class SendPushNotifications {
         Dependant dependent = userService.getDependentById(userId);
         String payload = APNS.newPayload().sound("default").badge(1).alertBody("User "+ dependent.getName() +" has reached bus stop "+
                 bus+". Current trip status is -"+tripStatus).build();
-        String token = "0ac1bc3dcaf6ffbc1b0b3b526c53d1259e2303f51401d7a82db3dcbe86b670f3";
+        String token = "7f29676dfeaabb0364bab68f6849ab265de6d9daca80836e948f9d127ba9feb5";
         apnsService.push(token, payload);
     }
 
