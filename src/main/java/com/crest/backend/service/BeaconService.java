@@ -10,7 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import static com.crest.backend.com.crest.backend.dao.FieldNamesConstant.BUS_STOP;
-import static com.crest.backend.com.crest.backend.dao.TableNameConstants.BEACON_REGISTRY;
+import static com.crest.backend.com.crest.backend.dao.TableNameConstants.*;
 
 
 public class BeaconService {
@@ -56,7 +56,7 @@ public class BeaconService {
         try {
             connection = dbConnection.getConnection();
             PreparedStatement p = connection
-                    .prepareStatement("select NAVIGATION_INFO from INTERNAL_NAVIGATION where SOURCE_BUS_STOP_ID = ? and DESTINATION_BUS_STOP_ID = ? ;");
+                    .prepareStatement("select NAVIGATION_INFO from " + INTERNAL_NAVIGATION +" where SOURCE_BUS_STOP_ID = ? and DESTINATION_BUS_STOP_ID = ? ;");
             p.setString(1, busStopId1);
             p.setString(2, busStopId2);
             ResultSet rs = p.executeQuery();
@@ -87,7 +87,7 @@ public class BeaconService {
         try {
             connection = dbConnection.getConnection();
             PreparedStatement p = connection
-                    .prepareStatement("INSERT INTO USER_LOCATION VALUES (?,?,?) ;");
+                    .prepareStatement("INSERT INTO USER_LOCATION  VALUES (?,?,?) ;");
             p.setString(1, userId);
             p.setString(2, busNumber);
             p.setString(3, tripStatus);

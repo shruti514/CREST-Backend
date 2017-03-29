@@ -60,7 +60,7 @@ public class UserService {
         PreparedStatement preparedStatement = null;
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM USERS WHERE email_id =?");
+            PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM "+ USER +" WHERE email_id =?");
             p.setString(1, emailId);
             ResultSet r = p.executeQuery();
             Integer alreadyPresent = 0;
@@ -69,7 +69,7 @@ public class UserService {
             }
             if(alreadyPresent <= 0){
                 connection = dbConnection.getConnection();
-                preparedStatement = connection.prepareStatement("INSERT INTO USERS (email_id,password,role) VALUES(?,?,?)");
+                preparedStatement = connection.prepareStatement("INSERT INTO "+ USER +" (email_id,password,role) VALUES(?,?,?)");
                 preparedStatement.setString(1, emailId);
                 preparedStatement.setString(2, password);
                 preparedStatement.setString(3, role);
@@ -93,7 +93,7 @@ public class UserService {
         DatabaseConnection dbConnection = new DatabaseConnection();
         int userIdToReturn = 0;
         try {
-            String query = "SELECT * FROM USERS where email_id=?";
+            String query = "SELECT * FROM "+USER +" where email_id=?";
             PreparedStatement preparedStatement = dbConnection.getConnection().prepareStatement(query);
             preparedStatement.setString(1, emailId);
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -122,7 +122,7 @@ public class UserService {
         DatabaseConnection dbConnection = new DatabaseConnection();
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM USERS WHERE email_id =?");
+            PreparedStatement preparedStatement = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM "+USER +" WHERE email_id =?");
             preparedStatement.setString(1, emailId);
             ResultSet r = preparedStatement.executeQuery();
             Integer alreadyPresent = 0;
@@ -132,7 +132,7 @@ public class UserService {
             if (alreadyPresent <= 0) {
                 int userId = saveUser(emailId, password, CAREGIVER);
 
-                PreparedStatement p = connection.prepareStatement("INSERT INTO CAREGIVER VALUES (?,?,?,?,?,?,?)");
+                PreparedStatement p = connection.prepareStatement("INSERT INTO "+CAREGIVER +"VALUES (?,?,?,?,?,?,?)");
                 p.setString(1, Integer.toString(userId));
                 p.setString(2, firstName);
                 p.setString(3, lastName);
@@ -190,7 +190,7 @@ public class UserService {
             log.info("Adding relation :=> [Caregiver:"+ careGiverId+",Dependant:"+dependantUserId+"]");
             connection = dbConnection.getConnection();
 
-            PreparedStatement p = connection.prepareStatement("INSERT INTO CAREGIVER_DEPENDANT (caregiver_id, dependant_id) VALUES (?,?)");
+            PreparedStatement p = connection.prepareStatement("INSERT INTO  CENSE.CAREGIVER_DEPENDANT (caregiver_id, dependant_id) VALUES (?,?)");
             p.setString(1, careGiverId);
             p.setString(2, dependantUserId);
             int updateStatus = p.executeUpdate();
@@ -213,7 +213,7 @@ public class UserService {
             log.info("Saving dependant");
             connection = dbConnection.getConnection();
 
-            PreparedStatement p = connection.prepareStatement("INSERT INTO DEPENDANTS VALUES (?,?,?,?,?,?,?,?,?)");
+            PreparedStatement p = connection.prepareStatement("INSERT INTO "+DEPENDANT +"VALUES (?,?,?,?,?,?,?,?,?)");
             p.setString(1, userId);
             p.setString(2, firstName);
             p.setString(3, lastName);
@@ -244,7 +244,7 @@ public class UserService {
 
         try {
             connection = dbConnection.getConnection();
-            PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM TRIP WHERE rider_id= ? AND scheduler_id = ? AND trip_start_time = ? AND trip_start_date = ? AND source_location = ? AND destination_location = ? ;  ");
+            PreparedStatement p = connection.prepareStatement("SELECT COUNT(*) AS COUNT FROM "+TRIP +" WHERE rider_id= ? AND scheduler_id = ? AND trip_start_time = ? AND trip_start_date = ? AND source_location = ? AND destination_location = ? ;  ");
             p.setString(1, riderId);
             p.setString(2, schedulerId);
             p.setString(3, tripStartTime);
@@ -260,7 +260,7 @@ public class UserService {
 
             }
             if (alreadyPresent <= 0) {
-                p = connection.prepareStatement("INSERT INTO TRIP (rider_id,scheduler_id,trip_start_time,trip_start_date,destination_location,source_location) VALUES(?,?,?,?,?,?) ;");
+                p = connection.prepareStatement("INSERT INTO "+ TRIP +"(rider_id,scheduler_id,trip_start_time,trip_start_date,destination_location,source_location) VALUES(?,?,?,?,?,?) ;");
 
                 p.setString(1, riderId);
                 p.setString(2, schedulerId);
@@ -271,7 +271,7 @@ public class UserService {
 
                 p.executeUpdate();
 
-                p = connection.prepareStatement("Select trip_id from TRIP where rider_id= ? AND scheduler_id = ? AND trip_start_time = ? AND trip_start_date = ? AND source_location = ?  AND destination_location = ? ;  ");
+                p = connection.prepareStatement("Select trip_id from "+TRIP +" where rider_id= ? AND scheduler_id = ? AND trip_start_time = ? AND trip_start_date = ? AND source_location = ?  AND destination_location = ? ;  ");
                 p.setString(1, riderId);
                 p.setString(2, schedulerId);
                 p.setString(3, tripStartTime);
@@ -320,7 +320,7 @@ public class UserService {
             log.info("Fetching a details of dependant with id :=> "+ userId);
             connection = dbConnection.getConnection();
 
-            PreparedStatement p = connection.prepareStatement("SELECT * from DEPENDANTS where user_id=?");
+            PreparedStatement p = connection.prepareStatement("SELECT * from "+DEPENDANT+" where user_id=?");
             p.setString(1, userId);
             ResultSet resultSet = p.executeQuery();
             log.info("Details fetched for dependant with id :=> "+ userId);
@@ -359,7 +359,7 @@ public class UserService {
             log.info("Fetching a list of dependants for caregiver with id :=> "+ caregiverId);
             connection = dbConnection.getConnection();
 
-            PreparedStatement p = connection.prepareStatement("SELECT dependant_id from CAREGIVER_DEPENDANT where caregiver_id=?");
+            PreparedStatement p = connection.prepareStatement("SELECT dependant_id from CENSE.CAREGIVER_DEPENDANT where caregiver_id=?");
             p.setString(1, caregiverId);
             ResultSet resultSet = p.executeQuery();
             log.info("List of dependants fetched for caregiver with id :=> "+ caregiverId);
@@ -394,7 +394,7 @@ public class UserService {
             log.info("Fetching a single of caregiver for a dependant with id :=> " + dependantId);
             connection = dbConnection.getConnection();
 
-            PreparedStatement p = connection.prepareStatement("SELECT * from CAREGIVER where user_id=?");
+            PreparedStatement p = connection.prepareStatement("SELECT * from "+CAREGIVER +" where user_id=?");
             p.setInt(1, careGiverIdForDependant);
             ResultSet resultSet = p.executeQuery();
             while(resultSet.next()){
@@ -428,7 +428,7 @@ public class UserService {
             log.info("Fetching a single of caregiver for a dependant with id :=> "+ dependantId);
             connection = dbConnection.getConnection();
 
-            PreparedStatement p = connection.prepareStatement("SELECT caregiver_id from CAREGIVER_DEPENDANT where dependant_id=?");
+            PreparedStatement p = connection.prepareStatement("SELECT caregiver_id from CENSE.CAREGIVER_DEPENDANT where dependant_id=?");
             p.setString(1, dependantId);
             ResultSet resultSet = p.executeQuery();
             log.info("List of caregivers fetched for dependant with id :=> "+ dependantId);
@@ -452,7 +452,7 @@ public class UserService {
             log.info("Fetching a schedule for a dependant rider with id :=> "+ dependantId);
             connection = dbConnection.getConnection();
 
-            PreparedStatement p = connection.prepareStatement("SELECT * from TRIP where rider_id=?");
+            PreparedStatement p = connection.prepareStatement("SELECT * from "+TRIP + " where rider_id=?");
             p.setString(1, dependantId);
             ResultSet resultSet = p.executeQuery();
             log.info("List of trips fetched for dependant with id :=> "+ dependantId);
@@ -521,7 +521,7 @@ public class UserService {
             log.info("Fetching a all trips scheduled by caregiver :=> "+ userId);
             connection = dbConnection.getConnection();
 
-            PreparedStatement p = connection.prepareStatement("SELECT * from TRIP where scheduler_id=?");
+            PreparedStatement p = connection.prepareStatement("SELECT * from "+TRIP +" where scheduler_id=?");
             p.setString(1, userId);
             ResultSet resultSet = p.executeQuery();
             log.info("List of trips fetched for caregiver with id :=> "+ userId);

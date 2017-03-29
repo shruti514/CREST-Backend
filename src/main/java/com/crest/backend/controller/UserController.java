@@ -61,7 +61,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
+    @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST)
     public
     @ResponseBody
     CrestResponse careGiverRegister(@RequestBody Map<String, String> request) throws Exception {

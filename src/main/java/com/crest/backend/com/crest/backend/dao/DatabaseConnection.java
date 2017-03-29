@@ -9,11 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private final static String USER = "cense";
-    private final static String PASSWORD = "MyNewPass4!";
-    private final static String URL = "jdbc:mysql://ec2-54-159-5-230.compute-1.amazonaws.com:3306/CENSE?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
+    private final static String USER = "USERNAME FOR MySQL COMPOSE DB";
+    private final static String PASSWORD = "PASSWORD FOR MySQL COMPOSE DB";
+    private final static String URL = "jdbc:mysql://THE CONNECTION STRING:21646/compose";
 
-    //private final static String URL="jdbc:oracle:thin:@rdsinstance.amazonaws.com :3306:RDSDB02";
+   
     private final static String DRIVER = "com.mysql.jdbc.Driver";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
