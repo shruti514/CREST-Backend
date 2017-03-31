@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * Created by sgangras on 12/4/16.
  */
-@Controller
+@RestController
 @Service
 @PropertySource("classpath:/application.properties")
 @RequestMapping("/cense")
@@ -61,7 +61,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/caregiver/register/", method = RequestMethod.POST,consumes = "application/json", produces = "application/json")
     public
     @ResponseBody
     CrestResponse careGiverRegister(@RequestBody Map<String, String> request) throws Exception {
@@ -121,7 +121,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/caregiver/{caregiverId}/dependents", method = RequestMethod.GET)
+    @RequestMapping(value = "/caregiver/dependents/{caregiverId}", method = RequestMethod.GET)
     @ResponseBody
     public List<Dependant> getAllPatients(@PathVariable("caregiverId") String caregiverId) throws Exception {
 
@@ -129,7 +129,7 @@ public class UserController {
         return allDependents;
     }
 
-    @RequestMapping(value = "/dependent/{userId}/profile", method = RequestMethod.GET)
+    @RequestMapping(value = "/dependent/profile/{userId}", method = RequestMethod.GET)
     @ResponseBody
     public DependantsProfile getDependantsProfile(@PathVariable("userId") String userId) throws Exception {
 

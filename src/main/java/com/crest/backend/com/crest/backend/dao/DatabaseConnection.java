@@ -9,9 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private final static String USER = "USERNAME FOR MySQL COMPOSE DB";
-    private final static String PASSWORD = "PASSWORD FOR MySQL COMPOSE DB";
-    private final static String URL = "jdbc:mysql://THE CONNECTION STRING:21646/compose";
+    private final static String USER = "USER NAME FOR BLUEMIX ENVIRONMENT";
+    private final static String PASSWORD = "PASSWORD FOR BLUEMIX ENVIRONMENT";
+    private final static String URL = "jdbc:mysql://CONNECTION STRING FOR BLUEMIX ENVIRONMENT";
 
    
     private final static String DRIVER = "com.mysql.jdbc.Driver";

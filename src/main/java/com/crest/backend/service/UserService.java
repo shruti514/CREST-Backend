@@ -66,6 +66,7 @@ public class UserService {
             Integer alreadyPresent = 0;
             while (r.next()) {
                 alreadyPresent = r.getInt("COUNT");
+                log.info("1.1 Count --->"+alreadyPresent);
             }
             if(alreadyPresent <= 0){
                 connection = dbConnection.getConnection();
@@ -74,6 +75,7 @@ public class UserService {
                 preparedStatement.setString(2, password);
                 preparedStatement.setString(3, role);
                 int rowsInserted = preparedStatement.executeUpdate();
+                log.info("1.2 rowsInserted --->"+rowsInserted);
                 if (rowsInserted > 0) {
                     log.info("A new user was inserted successfully!");
                 }
@@ -107,6 +109,8 @@ public class UserService {
                 log.info(String.format(output, ++count, id, email, role));
 
                 userIdToReturn = Integer.parseInt(id);
+               
+                log.info("Generated UserId -----------> "+id);
             }
             resultSet.close();
             preparedStatement.close();
@@ -130,7 +134,7 @@ public class UserService {
                 alreadyPresent = r.getInt("COUNT");
             }
             if (alreadyPresent <= 0) {
-                int userId = saveUser(emailId, password, CAREGIVER);
+                int userId = saveUser(emailId, password, "CAREGIVER");
 
                 PreparedStatement p = connection.prepareStatement("INSERT INTO "+CAREGIVER +"VALUES (?,?,?,?,?,?,?)");
                 p.setString(1, Integer.toString(userId));
@@ -167,9 +171,13 @@ public class UserService {
         CrestResponse crestResponse = new CrestResponse();
         try {
             String password = dateOfBirth.replace("-","");
-            int dependantUserId = saveUser(emailId, password, DEPENDANT);
+            log.info("1. Password ------->"+password);
+            int dependantUserId = saveUser(emailId, password, "DEPENDANT");
+            log.info("2 dependantUserId ----------->"+dependantUserId);
             int dependantSaved = saveDependant(Integer.toString(dependantUserId), firstName, lastName, contactNumber, age, address, emergencyContact, careGiverId, additionalInfo, emailId, password);
+            log.info("3 dependantSaved ----------->"+dependantSaved);
             int updatedRelation = addCaregiverDependantRelation(Integer.toString(dependantUserId), careGiverId);
+            log.info("4 updatedRelation ----------->"+updatedRelation);
 
 
             crestResponse.setUserId(Integer.toString(dependantUserId));
@@ -195,7 +203,9 @@ public class UserService {
             p.setString(2, dependantUserId);
             int updateStatus = p.executeUpdate();
             log.info("Relation added :=> [Caregiver:"+ careGiverId+",Dependant:"+dependantUserId+"]");
+            log.info("addCaregiverDependantRelation ------>"+ updateStatus);
             return updateStatus;
+           
         } catch (Exception e) {
             log.error("Exception at addCaregiverDependantRelation", e);
         } finally {
@@ -210,7 +220,7 @@ public class UserService {
         DatabaseConnection dbConnection = new DatabaseConnection();
         String result = "";
         try {
-            log.info("Saving dependant");
+            log.info("Saving dependant ----->"+userId);
             connection = dbConnection.getConnection();
 
             PreparedStatement p = connection.prepareStatement("INSERT INTO "+DEPENDANT +"VALUES (?,?,?,?,?,?,?,?,?)");
@@ -224,7 +234,7 @@ public class UserService {
             p.setString(8, emergencyContact);
             p.setString(9, address);
             int updateStatus = p.executeUpdate();
-            log.info("Dependant saved");
+            log.info("Dependant saved ----->"+ updateStatus);
             return updateStatus;
 
         } catch (Exception e) {
