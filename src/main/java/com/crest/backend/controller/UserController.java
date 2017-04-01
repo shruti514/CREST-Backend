@@ -108,7 +108,7 @@ public class UserController {
     }
 
 
-    @RequestMapping(value = "/user/{userId}/{busNumber}/{tripStatus}", method = RequestMethod.POST)
+    @RequestMapping(value = "/user/updateUser/{userId}/{busNumber}/{tripStatus}", method = RequestMethod.POST)
     public
     @ResponseBody
     CrestResponse getUserLocation(@PathVariable("userId") String userId, @PathVariable("busNumber") String busNumber, @PathVariable("tripStatus") String tripStatus) throws Exception {
@@ -126,6 +126,7 @@ public class UserController {
     public List<Dependant> getAllPatients(@PathVariable("caregiverId") String caregiverId) throws Exception {
 
         List<Dependant> allDependents = userService.getAllDependents(caregiverId);
+     
         return allDependents;
     }
 

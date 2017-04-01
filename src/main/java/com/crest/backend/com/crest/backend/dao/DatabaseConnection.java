@@ -9,11 +9,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class DatabaseConnection {
-    private final static String USER = "USER NAME FOR BLUEMIX ENVIRONMENT";
-    private final static String PASSWORD = "PASSWORD FOR BLUEMIX ENVIRONMENT";
-    private final static String URL = "jdbc:mysql://CONNECTION STRING FOR BLUEMIX ENVIRONMENT";
-
-   
+	 
+	private final static String USER = "CENSER BLUEMIX ENVIRONMENT";
+	private final static String PASSWORD = "CENSER BLUEMIX ENVIRONMENT";
+	private final static String URL = "jdbc:mysql://CENSER BLUEMIX ENVIRONMENT:21646/compose";
     private final static String DRIVER = "com.mysql.jdbc.Driver";
 
     protected final Logger log = LoggerFactory.getLogger(getClass());

@@ -87,7 +87,7 @@ public class BeaconService {
         try {
             connection = dbConnection.getConnection();
             PreparedStatement p = connection
-                    .prepareStatement("INSERT INTO USER_LOCATION  VALUES (?,?,?) ;");
+                    .prepareStatement("INSERT INTO CENSE.USER_LOCATION  VALUES (?,?,?) ;");
             p.setString(1, userId);
             p.setString(2, busNumber);
             p.setString(3, tripStatus);

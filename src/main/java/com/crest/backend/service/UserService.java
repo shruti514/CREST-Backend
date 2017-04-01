@@ -261,6 +261,7 @@ public class UserService {
             p.setString(4, tripDate);
             p.setString(5, source);
             p.setString(6, destination);
+           
 
             ResultSet rs = p.executeQuery();
             Integer alreadyPresent = 0;
@@ -465,16 +466,20 @@ public class UserService {
             PreparedStatement p = connection.prepareStatement("SELECT * from "+TRIP + " where rider_id=?");
             p.setString(1, dependantId);
             ResultSet resultSet = p.executeQuery();
+            log.info(p.toString());
             log.info("List of trips fetched for dependant with id :=> "+ dependantId);
             while(resultSet.next()){
-                String tripId = resultSet.getString(1);
-                String riderId = resultSet.getString(2);
-                String schedulerId = resultSet.getString(3);
-                String startTime = resultSet.getString(4);
-                String tripDate = resultSet.getString(5);
-                String destinationLocation = resultSet.getString(6);
-                String sourceLocation = resultSet.getString(7);
-
+            	
+            	String tripId = resultSet.getString(7);
+                String riderId = resultSet.getString(1);
+                log.info(riderId);
+                String schedulerId = resultSet.getString(2);
+                
+                String startTime = resultSet.getString(3);
+                String tripDate = resultSet.getString(4);
+                String destinationLocation = resultSet.getString(5);
+                String sourceLocation = resultSet.getString(6);
+                
                 Trip trip = new Trip();
                 trip.setTripId(tripId);
                 trip.setRiderId(riderId);
@@ -503,7 +508,7 @@ public class UserService {
             connection = dbConnection.getConnection();
             PreparedStatement p = connection.prepareStatement("select ID  as ID from " + USER + " where password=? and role=?;");
             p.setString(1, birthdate);
-            p.setString(2, DEPENDANT);
+            p.setString(2, "DEPENDANT");
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 result = rs.getString("ID");
@@ -533,16 +538,19 @@ public class UserService {
 
             PreparedStatement p = connection.prepareStatement("SELECT * from "+TRIP +" where scheduler_id=?");
             p.setString(1, userId);
+            
             ResultSet resultSet = p.executeQuery();
             log.info("List of trips fetched for caregiver with id :=> "+ userId);
             while(resultSet.next()){
-                String tripId = resultSet.getString(1);
-                String riderId = resultSet.getString(2);
-                String schedulerId = resultSet.getString(3);
-                String startTime = resultSet.getString(4);
-                String tripDate = resultSet.getString(5);
-                String destinationLocation = resultSet.getString(6);
-                String sourceLocation = resultSet.getString(7);
+                String tripId = resultSet.getString(7);
+                String riderId = resultSet.getString(1);
+                log.info(riderId);
+                String schedulerId = resultSet.getString(2);
+                
+                String startTime = resultSet.getString(3);
+                String tripDate = resultSet.getString(4);
+                String destinationLocation = resultSet.getString(5);
+                String sourceLocation = resultSet.getString(6);
 
                 Dependant dependent = getDependentById(riderId);
 
