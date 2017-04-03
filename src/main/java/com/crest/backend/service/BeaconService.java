@@ -1,6 +1,7 @@
 package com.crest.backend.service;
 
 import com.crest.backend.com.crest.backend.dao.DatabaseConnection;
+import com.crest.backend.model.BeaconDetails;
 import com.crest.backend.model.CrestResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,8 +48,7 @@ public class BeaconService {
         return crestResponse;
     }
 
-
-    public CrestResponse getStationFromBeaconId(String busStopId1, String busStopId2) throws Exception {
+    public CrestResponse getNavigatinBetwnBeacons(String srcBeaconId, String destBeaconId) throws Exception {
         Connection connection = null;
         CrestResponse crestResponse = new CrestResponse();
         DatabaseConnection dbConnection = new DatabaseConnection();
@@ -56,9 +56,9 @@ public class BeaconService {
         try {
             connection = dbConnection.getConnection();
             PreparedStatement p = connection
-                    .prepareStatement("select NAVIGATION_INFO from " + INTERNAL_NAVIGATION +" where SOURCE_BUS_STOP_ID = ? and DESTINATION_BUS_STOP_ID = ? ;");
-            p.setString(1, busStopId1);
-            p.setString(2, busStopId2);
+                    .prepareStatement("select NAVIGATION_INFO from " + INTERNAL_NAVIGATION +" where SOURCE_BEACON_ID = ? and DESTINATION_BEACON_ID = ? ;");
+            p.setString(1, srcBeaconId);
+            p.setString(2, destBeaconId);
             ResultSet rs = p.executeQuery();
             while (rs.next()) {
                 result = rs.getString(1);
@@ -106,5 +106,34 @@ public class BeaconService {
         }
         return crestResponse;
 
+    }
+
+    public BeaconDetails getBeaconDetails(String beaconId) {
+        Connection connection = null;
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        String result = "";
+        PreparedStatement preparedStatement = null;
+        BeaconDetails beaconDetails = null;
+        try {
+            connection = dbConnection.getConnection();
+            preparedStatement = connection.prepareStatement("select * from "+ BEACON_REGISTRY+" where BEACON_ID = ?;");
+            preparedStatement.setString(1, beaconId);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                beaconDetails = new BeaconDetails();
+                beaconDetails.setBeaconId(rs.getString("BEACON_ID"));
+                beaconDetails.setMajor(rs.getInt("BEACON_MAJOR"));
+                beaconDetails.setMinor(rs.getInt("BEACON_MINOR"));
+                beaconDetails.setDeploymentDetails(rs.getString("BEACON_DEPLOYMENT_DETAILS"));
+                beaconDetails.setDeploymentType(rs.getString("BEACON_DEPLOYMENT_TYPE"));
+            }
+        } catch (Exception e) {
+            log.error("Exception at getBeaconDetails", e);
+        } finally {
+            dbConnection.closePreparedStatement(preparedStatement);
+            dbConnection.closeConnection(connection);
+        }
+        return beaconDetails;
     }
 }

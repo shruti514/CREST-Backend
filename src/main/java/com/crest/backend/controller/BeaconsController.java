@@ -1,5 +1,6 @@
 package com.crest.backend.controller;
 
+import com.crest.backend.model.BeaconDetails;
 import com.crest.backend.model.CrestResponse;
 import com.crest.backend.pushAPN.SendPushNotifications;
 import com.crest.backend.service.BeaconService;
@@ -58,12 +59,21 @@ public class BeaconsController {
 
     }
 
-    @RequestMapping(value = "/station/{busStopId1}/{busStopId2}", method = RequestMethod.GET)
+    @RequestMapping(value = "/beacon/{beaconId}", method = RequestMethod.GET)
     public
     @ResponseBody
-    CrestResponse getStationFromBeaconID(@PathVariable("busStopId1") String busStopId1, @PathVariable("busStopId2") String busStopId2) throws Exception {
+    BeaconDetails getBeaconDetails(@PathVariable("beaconId") String beaconId) throws Exception {
 
-        crestResponse = beaconService.getStationFromBeaconId(busStopId1, busStopId2);
+        BeaconDetails beaconDetails = beaconService.getBeaconDetails(beaconId);
+        return beaconDetails;
+    }
+
+    @RequestMapping(value = "/navigate/{srcBeaconId}/{destBeaconId}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    CrestResponse getNavigatinBetwnBeacons(@PathVariable("srcBeaconId") String srcBeaconId, @PathVariable("destBeaconId") String destBeaconId) throws Exception {
+
+        crestResponse = beaconService.getNavigatinBetwnBeacons(srcBeaconId, destBeaconId);
         return crestResponse;
 
     }
