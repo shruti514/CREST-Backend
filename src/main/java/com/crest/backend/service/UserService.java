@@ -545,15 +545,15 @@ public class UserService {
             ResultSet resultSet = p.executeQuery();
             log.info("List of trips fetched for caregiver with id :=> "+ userId);
             while(resultSet.next()){
-                String tripId = resultSet.getString(7);
-                String riderId = resultSet.getString(1);
+                String tripId = resultSet.getString("TRIP_ID");
+                String riderId = resultSet.getString("rider_id");
                 log.info(riderId);
-                String schedulerId = resultSet.getString(2);
+                String schedulerId = resultSet.getString("scheduler_id");
                 
-                String startTime = resultSet.getString(3);
-                String tripDate = resultSet.getString(4);
-                String destinationLocation = resultSet.getString(5);
-                String sourceLocation = resultSet.getString(6);
+                String startTime = resultSet.getString("trip_start_time");
+                String tripDate = resultSet.getString("trip_start_date");
+                String destinationLocation = resultSet.getString("destination_location");
+                String sourceLocation = resultSet.getString("source_location");
 
                 Dependant dependent = getDependentById(riderId);
 
