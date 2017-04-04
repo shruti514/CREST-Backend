@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -65,10 +66,14 @@ public class UserController {
     public
     @ResponseBody
     CrestResponse careGiverRegister(@RequestBody Map<String, String> request) throws Exception {
-        crestResponse = userService.careGiverRegister(request.get("firstName"), request.get("lastName"),request.get("age"), request.get("address"), request.get("contactNumber"), request.get("email"),request.get("password"));
+        crestResponse = userService.careGiverRegister(request.get("firstName"), request.get("lastName"),
+                request.get("age"), request.get("address"), request.get("contactNumber"),
+                request.get("email"),request.get("password"));
 
         return crestResponse;
     }
+
+    
 
     @RequestMapping(value = "/user/dependant/register/", method = RequestMethod.POST,consumes = "application/json", produces = "application/json")
     public

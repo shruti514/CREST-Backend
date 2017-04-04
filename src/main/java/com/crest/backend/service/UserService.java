@@ -136,7 +136,7 @@ public class UserService {
             if (alreadyPresent <= 0) {
                 int userId = saveUser(emailId, password, "CAREGIVER");
 
-                PreparedStatement p = connection.prepareStatement("INSERT INTO "+CAREGIVER +"VALUES (?,?,?,?,?,?,?)");
+                PreparedStatement p = connection.prepareStatement("INSERT INTO "+CAREGIVER +"VALUES (?,?,?,?,?,?,?,?)");
                 p.setString(1, Integer.toString(userId));
                 p.setString(2, firstName);
                 p.setString(3, lastName);
@@ -144,6 +144,7 @@ public class UserService {
                 p.setString(5, contactNumber);
                 p.setString(6, age);
                 p.setString(7, emailId);
+                p.setString(8, null);
                 p.executeUpdate();
                 crestResponse.setStatusCode("200");
                 crestResponse.setUserId(Integer.toString(userId));
