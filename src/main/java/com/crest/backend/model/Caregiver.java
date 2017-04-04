@@ -14,6 +14,7 @@ public class Caregiver {
     private String contactNumber;
     private String age;
     private String email;
+    private String deviceToken;
 
     public String getId() {
         return id;
@@ -43,6 +44,18 @@ public class Caregiver {
         return address;
     }
 
+    public String getAge() {
+        return age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDeviceToken() {
+        return deviceToken;
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
@@ -61,5 +74,9 @@ public class Caregiver {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public void setDeviceToken(String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 }

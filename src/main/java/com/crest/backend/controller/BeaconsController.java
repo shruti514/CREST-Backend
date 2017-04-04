@@ -68,6 +68,27 @@ public class BeaconsController {
         return beaconDetails;
     }
 
+    @RequestMapping(value = "/addtoken/{caregiverid}/{devicetoken}", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    void addDeviceTokenForCaregiver(@PathVariable("caregiverid") String caregiverid,@PathVariable("devicetoken") String devicetoken) throws Exception {
+        userService.addTokenForCareGiver(caregiverid, devicetoken);
+    }
+
+    public static  void main(String args[]){
+        BeaconsController beaconsController = new BeaconsController();
+        UserService userService = new UserService();
+        beaconsController.userService = userService;
+
+        try {
+            beaconsController.addDeviceTokenForCaregiver("1044","7baba84b5ed0c27c0f6933d864485d29696821f0fafb2f6cbd9ced347e6e1a7f");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+
     @RequestMapping(value = "/navigate/{srcBeaconId}/{destBeaconId}", method = RequestMethod.GET)
     public
     @ResponseBody

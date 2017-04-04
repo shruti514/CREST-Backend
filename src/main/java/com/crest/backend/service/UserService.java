@@ -394,7 +394,7 @@ public class UserService {
         return dependantsProfile;
     }
 
-    private Caregiver getCaregiverForDependant(String dependantId){
+    public Caregiver getCaregiverForDependant(String dependantId){
 
         int careGiverIdForDependant = getCaregiverIdForDependant(dependantId);
 
@@ -416,6 +416,7 @@ public class UserService {
                 String phone = resultSet.getString(5);
                 String age = resultSet.getString(6);
                 String email = resultSet.getString(7);
+                String deviceToken = resultSet.getString(8);
 
                 caregiver.setId(userId);
                 caregiver.setProfileImage(firstName);
@@ -424,6 +425,7 @@ public class UserService {
                 caregiver.setContactNumber(phone);
                 caregiver.setAge(age);
                 caregiver.setEmail(email);
+                caregiver.setDeviceToken(deviceToken);
             }
         }catch (Exception e){
             log.error("Error fetching a caregiver for dependant :=> "+dependantId, e);
@@ -431,7 +433,7 @@ public class UserService {
         return caregiver;
     }
 
-    private int getCaregiverIdForDependant(String dependantId) {
+    public int getCaregiverIdForDependant(String dependantId) {
         Connection connection = null;
         DatabaseConnection dbConnection = new DatabaseConnection();
         int careGiverId = 0;
@@ -470,15 +472,15 @@ public class UserService {
             log.info("List of trips fetched for dependant with id :=> "+ dependantId);
             while(resultSet.next()){
             	
-            	String tripId = resultSet.getString(7);
-                String riderId = resultSet.getString(1);
+            	String tripId = resultSet.getString("TRIP_ID");
+                String riderId = resultSet.getString("rider_id");
                 log.info(riderId);
-                String schedulerId = resultSet.getString(2);
+                String schedulerId = resultSet.getString("scheduler_id");
                 
-                String startTime = resultSet.getString(3);
-                String tripDate = resultSet.getString(4);
-                String destinationLocation = resultSet.getString(5);
-                String sourceLocation = resultSet.getString(6);
+                String startTime = resultSet.getString("trip_start_time");
+                String tripDate = resultSet.getString("trip_start_date");
+                String destinationLocation = resultSet.getString("destination_location");
+                String sourceLocation = resultSet.getString("source_location");
                 
                 Trip trip = new Trip();
                 trip.setTripId(tripId);
@@ -571,6 +573,27 @@ public class UserService {
             dbConnection.closeConnection(connection);
         }
         return trips;
+    }
+
+    public void addTokenForCareGiver(String caregiverid, String devicetoken) {
+        Connection connection = null;
+        DatabaseConnection dbConnection = new DatabaseConnection();
+        String result = "";
+        try {
+            log.info("Saving token ("+devicetoken+") for caregiver ----->"+caregiverid);
+            connection = dbConnection.getConnection();
+
+            PreparedStatement p = connection.prepareStatement("UPDATE CENSE.CAREGIVER SET devicetoken = ? WHERE user_id = ?");
+            p.setString(1, devicetoken);
+            p.setString(2, caregiverid);
+            int updateStatus = p.executeUpdate();
+            log.info("Added token for caregiverId  ----->"+ updateStatus);
+
+        } catch (Exception e) {
+            log.error("Exception at saveDependant", e);
+        } finally {
+            dbConnection.closeConnection(connection);
+        }
     }
 
     private enum Role {

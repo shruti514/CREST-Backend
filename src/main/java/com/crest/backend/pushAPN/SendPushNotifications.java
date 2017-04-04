@@ -1,5 +1,6 @@
 package com.crest.backend.pushAPN;
 
+import com.crest.backend.model.Caregiver;
 import com.crest.backend.model.Dependant;
 import com.crest.backend.service.UserService;
 import com.notnoop.apns.APNS;
@@ -22,24 +23,32 @@ public class SendPushNotifications {
 
     public void sendPushNotifications(String userId, String bus,String tripStatus){
         Dependant dependent = userService.getDependentById(userId);
+        Caregiver caregiver = userService.getCaregiverForDependant(userId);
+
         String payload = APNS.newPayload().sound("default").badge(1).alertBody("User "+ dependent.getName() +" has reached bus stop "+
                 bus+". Current trip status is -"+tripStatus).build();
-        String token = "0ac1bc3dcaf6ffbc1b0b3b526c53d1259e2303f51401d7a82db3dcbe86b670f3";
-        apnsService.push(token, payload);
+        //String token = "7baba84b5ed0c27c0f6933d864485d29696821f0fafb2f6cbd9ced347e6e1a7f";
+        if(caregiver!=null && caregiver.getDeviceToken() != null){
+            apnsService.push(caregiver.getDeviceToken(), payload);
+        }
     }
 
     public void sendFallPushNotifications(String userId){
         Dependant dependent = userService.getDependentById(userId);
         String payload = APNS.newPayload().sound("default").badge(1).alertBody("Alert - A device fall has been detected on "+ dependent.getName()
                 +" device.").build();
-        String token = "0ac1bc3dcaf6ffbc1b0b3b526c53d1259e2303f51401d7a82db3dcbe86b670f3";
-        apnsService.push(token, payload);
+        Caregiver caregiver = userService.getCaregiverForDependant(userId);
+       // String token = "7baba84b5ed0c27c0f6933d864485d29696821f0fafb2f6cbd9ced347e6e1a7f";
+        if(caregiver!=null && caregiver.getDeviceToken() !=null){
+            apnsService.push(caregiver.getDeviceToken(), payload);
+        }
+
     }
 
 
     public static void main(String args[]){
         SendPushNotifications sendPushNotifications = new SendPushNotifications();
-        sendPushNotifications.sendFallPushNotifications("someuserId");
+        sendPushNotifications.sendFallPushNotifications("1051");
     }
 
 }
